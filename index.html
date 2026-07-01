@@ -1,0 +1,2457 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maa Santoshi Steel Center — Kitchenwares</title>
+<meta name="description" content="Maa Santoshi Steel Center, Bhandup West, Mumbai — quality stainless steel kitchenware & cookware. Browse cookware, utensils, mixers, cookers, bakeware and storage, and order easily on WhatsApp.">
+<meta name="theme-color" content="#e8732e">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>🍳</text></svg>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Maa Santoshi Steel Center — Kitchenwares">
+<meta property="og:description" content="Browse our kitchenware and place your order on WhatsApp.">
+<meta name="twitter:card" content="summary">
+<div id="root"></div>
+
+<style>
+  :root {
+    /* spice-market palette: deep warm grounds, brass + saffron accents */
+    --brass: #d9a24b;
+    --brass-deep: #b97e2e;
+    --saffron: #e8732e;
+    --ink: #1c1814;          /* near-black warm */
+    --ink-2: #271f18;        /* raised dark surface */
+    --bg: #efe6d6;           /* warm sand page bg */
+    --bg-2: #e7dcc8;         /* slightly deeper sand for banding */
+    --surface: #fbf6ec;      /* card / panel surface */
+    --surface-2: #f3ead9;    /* inset / thumb bg */
+    --text: #2a221a;
+    --muted: #8a7d6a;
+    --line: #e0d4be;
+    --line-soft: #ece2d0;
+    --danger: #b8442f;
+  }
+
+  /* Dark theme — a deep, warm near-black that keeps the brass + saffron accents */
+  :root[data-theme="dark"] {
+    --brass: #e6b765;
+    --brass-deep: #d49a3f;
+    --saffron: #ef8434;
+    --ink: #100d0a;          /* darkest surface: hero, toast, add-btn */
+    --ink-2: #1b1611;
+    --bg: #15110d;           /* page background */
+    --bg-2: #1c1712;         /* banding / scrollbar track */
+    --surface: #221c15;      /* card / panel surface */
+    --surface-2: #2c251c;    /* inset / thumb bg */
+    --text: #f1e8d8;
+    --muted: #a99c86;
+    --line: #3a3122;
+    --line-soft: #2c2519;
+    --danger: #e8765c;
+  }
+  :root[data-theme="dark"] header { background: rgba(28,23,17,.80); }
+  :root[data-theme="dark"] .card .thumb,
+  :root[data-theme="dark"] .cart-line .ci-thumb,
+  :root[data-theme="dark"] .admin-item .ai-thumb {
+    background: radial-gradient(circle at 50% 35%, var(--surface-2), var(--ink-2));
+  }
+  :root[data-theme="dark"] .add-btn { box-shadow: inset 0 0 0 1px var(--line); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* form controls don't inherit text color by default — keep them readable in both themes */
+  input, select, textarea { color: var(--text); }
+  option { color: var(--text); background: var(--surface); }
+
+  #root {
+    font-family: 'Hanken Grotesk', -apple-system, system-ui, sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(217,162,75,.18), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(232,115,46,.12), transparent 55%),
+      radial-gradient(760px 760px at 50% 118%, rgba(217,162,75,.10), transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Themed brass scrollbar */
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: var(--bg-2); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--brass), var(--brass-deep));
+    border-radius: 999px; border: 3px solid var(--bg-2);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: linear-gradient(var(--saffron), var(--brass-deep)); }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header {
+    background: rgba(251,246,236,.82);
+    backdrop-filter: saturate(150%) blur(14px);
+    -webkit-backdrop-filter: saturate(150%) blur(14px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 6px 24px rgba(40,28,12,.06);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .bar {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 78px; gap: 16px 24px; flex-wrap: wrap; padding: 12px 0;
+  }
+  .logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+  .logo .crest {
+    width: 50px; height: 50px; border-radius: 14px; flex-shrink: 0; overflow: hidden;
+    background: linear-gradient(150deg, var(--brass), var(--saffron));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; box-shadow: 0 6px 16px rgba(232,115,46,.34), inset 0 1px 0 rgba(255,255,255,.35);
+    transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s;
+  }
+  .logo:hover .crest {
+    transform: rotate(-4deg) scale(1.05);
+    box-shadow: 0 10px 24px rgba(232,115,46,.42), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .logo .crest.has-img { background: var(--surface); }
+  .logo .crest img { width: 100%; height: 100%; object-fit: cover; }
+  .logo .crest svg { width: 30px; height: 30px; display: block; }
+  .logo .mark {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 22px; font-weight: 600; letter-spacing: -0.02em;
+    color: var(--text); line-height: 1.05;
+  }
+  .logo .tag {
+    display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em;
+    color: var(--brass-deep); margin-top: 3px; font-weight: 600;
+  }
+  nav { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; flex: 1; justify-content: flex-end; }
+  .cats { display: flex; gap: 2px; flex-wrap: wrap; flex: 1; min-width: 0; }
+  .actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
+  .cat-btn {
+    background: none; border: none; font: inherit; font-size: 14px;
+    color: var(--muted); padding: 8px 13px; border-radius: 999px; cursor: pointer;
+    transition: background .18s, color .18s;
+  }
+  .cat-btn:hover { background: var(--surface-2); color: var(--text); }
+  .cat-btn.active {
+    color: var(--text); font-weight: 600;
+    background: linear-gradient(150deg, rgba(217,162,75,.28), rgba(232,115,46,.22));
+  }
+
+  .icon-btn {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
+    padding: 9px 14px; font: inherit; font-size: 14px; cursor: pointer;
+    color: var(--text); display: inline-flex; align-items: center; gap: 7px;
+    transition: border-color .18s, transform .12s, box-shadow .18s;
+  }
+  .icon-btn:hover { border-color: var(--brass); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(40,28,12,.08); }
+  .icon-btn.active { border-color: var(--brass); }
+  .caret { font-size: 10px; opacity: .7; margin-left: 1px; }
+  .acct-wrap { position: relative; }
+  .acct-menu {
+    position: absolute; right: 0; top: calc(100% + 8px); z-index: 60;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: 0 16px 38px rgba(24,18,12,.22); width: 248px; overflow: hidden;
+    animation: rise .2s cubic-bezier(.2,.8,.2,1);
+  }
+  .acct-id { padding: 15px 16px; border-bottom: 1px solid var(--line-soft); }
+  .acct-role { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--brass-deep); font-weight: 700; }
+  .acct-detail { font-size: 15px; font-weight: 600; margin-top: 4px; word-break: break-word; }
+  .acct-sub { font-size: 12.5px; color: var(--muted); margin-top: 2px; word-break: break-word; }
+  .acct-signout {
+    width: 100%; text-align: left; background: none; border: none; cursor: pointer;
+    font: inherit; font-size: 14px; font-weight: 600; color: var(--danger);
+    padding: 13px 16px; transition: background .15s;
+  }
+  .acct-signout:hover { background: rgba(184,68,47,.08); }
+  .cart-count {
+    background: var(--saffron); color: #fff; border-radius: 999px;
+    min-width: 20px; height: 20px; font-size: 12px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center; padding: 0 5px;
+    box-shadow: 0 2px 6px rgba(232,115,46,.4);
+    animation: badgePop .32s cubic-bezier(.2,.9,.3,1.5);
+  }
+  @keyframes badgePop { from { transform: scale(0); } to { transform: scale(1); } }
+  .btn-primary {
+    background: linear-gradient(150deg, var(--saffron), var(--brass-deep));
+    color: #fff; border: none; border-radius: 11px;
+    padding: 11px 19px; font: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: transform .12s, box-shadow .18s, filter .18s;
+    box-shadow: 0 6px 16px rgba(232,115,46,.28);
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::after {
+    content: ""; position: absolute; top: 0; left: -120%; width: 55%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.38), transparent);
+    transform: skewX(-18deg); transition: left .55s ease; pointer-events: none;
+  }
+  .btn-primary:hover::after { left: 150%; }
+  .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 9px 22px rgba(232,115,46,.36); }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
+    padding: 11px 19px; font: inherit; font-size: 14px; cursor: pointer; color: var(--text);
+    transition: border-color .18s;
+  }
+  .btn-ghost:hover { border-color: var(--brass); }
+
+  /* Search row */
+  .searchrow {
+    display: flex; align-items: center; gap: 10px; padding: 0 0 14px;
+    position: relative;
+  }
+  .search-ic { position: absolute; left: 14px; font-size: 14px; opacity: .6; pointer-events: none; }
+  .search-input {
+    flex: 1; border: 1px solid var(--line); border-radius: 12px;
+    padding: 11px 14px 11px 40px; font: inherit; font-size: 14.5px;
+    background: var(--surface); color: var(--text);
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .search-input:focus { outline: none; border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(232,115,46,.13); }
+  .search-clear {
+    position: absolute; right: 12px; background: var(--surface-2); border: 1px solid var(--line);
+    width: 26px; height: 26px; border-radius: 8px; cursor: pointer; font-size: 16px; line-height: 1;
+    color: var(--muted);
+  }
+  .search-clear:hover { color: var(--danger); border-color: var(--danger); }
+
+  /* Discount + strikethrough */
+  .disc-badge {
+    position: absolute; top: 11px; right: 11px; background: var(--danger); color: #fff;
+    font-size: 12px; font-weight: 700; padding: 4px 9px; border-radius: 999px;
+    box-shadow: 0 3px 10px rgba(184,68,47,.35);
+  }
+  .disc-badge-sm {
+    background: var(--danger); color: #fff; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 999px; margin-left: 8px; vertical-align: middle;
+  }
+  .price-wrap { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .price-old {
+    font-size: 14px; color: var(--muted); text-decoration: line-through; font-weight: 500;
+    font-family: 'Hanken Grotesk', sans-serif;
+  }
+
+  /* Promo banner on home */
+  .promo-banner {
+    display: inline-flex; align-items: center; gap: 12px; margin-top: 26px;
+    background: linear-gradient(150deg, rgba(232,115,46,.22), rgba(217,162,75,.18));
+    border: 1px solid rgba(232,115,46,.45); color: #fbf2e2;
+    padding: 12px 18px; border-radius: 14px; font-size: 15.5px; font-weight: 500;
+    max-width: 560px; line-height: 1.4;
+  }
+  .promo-tag {
+    background: var(--saffron); color: #fff; font-size: 11px; text-transform: uppercase;
+    letter-spacing: .1em; font-weight: 700; padding: 4px 10px; border-radius: 999px; flex-shrink: 0;
+  }
+
+  /* Store settings bits */
+  .logo-preview {
+    width: 56px; height: 56px; border-radius: 14px; overflow: hidden; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 26px;
+    background: linear-gradient(150deg, var(--brass), var(--saffron));
+  }
+  .logo-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .logo-preview svg { width: 34px; height: 34px; }
+  .cat-tag {
+    display: inline-flex; align-items: center; gap: 6px; background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: 999px; padding: 6px 8px 6px 13px;
+    font-size: 13.5px; font-weight: 500;
+  }
+  .cat-tag-x {
+    background: none; border: none; cursor: pointer; color: var(--muted); font-size: 16px;
+    line-height: 1; width: 20px; height: 20px; border-radius: 999px;
+  }
+  .cat-tag-x:hover { color: var(--danger); background: rgba(184,68,47,.1); }
+
+  /* Hero */
+  .hero {
+    background:
+      radial-gradient(800px 400px at 78% 30%, rgba(232,115,46,.30), transparent 60%),
+      radial-gradient(700px 500px at 12% 90%, rgba(217,162,75,.22), transparent 55%),
+      linear-gradient(155deg, #2a201700 0%, var(--ink) 55%, #120f0c 100%);
+    background-color: var(--ink);
+    color: #f3ead9; padding: 48px 0 52px; position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 22px 22px; opacity: .5; pointer-events: none;
+  }
+  .hero .wrap { position: relative; z-index: 2; }
+  .hero .eyebrow {
+    display: inline-block; font-size: 12px; text-transform: uppercase; letter-spacing: .22em;
+    color: var(--brass); margin-bottom: 18px; font-weight: 600;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 600;
+    font-size: clamp(28px, 4.4vw, 44px); line-height: 1.05; letter-spacing: -0.02em;
+    max-width: 620px; color: #fcf6ea;
+  }
+  .hero h1 em {
+    font-style: italic;
+    background: linear-gradient(120deg, var(--brass) 0%, var(--saffron) 50%, #f4ba63 100%);
+    background-size: 220% auto;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    animation: sheen 6s ease-in-out infinite;
+  }
+  @keyframes sheen { 0%, 100% { background-position: 0% center; } 50% { background-position: 100% center; } }
+  .hero p { margin-top: 22px; max-width: 470px; font-size: 17px; color: #cdbfa6; line-height: 1.55; }
+  .hero .hero-stats { display: flex; gap: 24px; margin-top: 26px; flex-wrap: wrap; }
+  .hero .hero-stats .stat .n {
+    font-family: 'Fraunces', Georgia, serif; font-size: 18px; font-weight: 600; color: var(--brass);
+  }
+  .hero .hero-stats .stat .l { font-size: 10.5px; color: #b3a488; text-transform: uppercase; letter-spacing: .1em; margin-top: 1px; }
+  .hero-deco {
+    position: absolute; right: -30px; top: 50%; transform: translateY(-50%) rotate(-8deg);
+    font-size: 300px; opacity: 0.08; z-index: 1; line-height: 1; filter: grayscale(.2);
+    animation: floaty 9s ease-in-out infinite;
+  }
+  @keyframes floaty {
+    0%, 100% { transform: translateY(-50%) rotate(-8deg); }
+    50% { transform: translateY(-54%) rotate(-5deg); }
+  }
+
+  /* Grid */
+  .section-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin: 52px 0 26px; flex-wrap: wrap; gap: 12px;
+  }
+  .section-head h2 {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 30px;
+    letter-spacing: -0.015em; position: relative; padding-bottom: 10px;
+  }
+  .section-head h2::after {
+    content: ""; position: absolute; left: 0; bottom: 0; width: 46px; height: 3px;
+    border-radius: 3px; background: linear-gradient(90deg, var(--saffron), var(--brass));
+  }
+  .section-head .count {
+    font-size: 13px; color: var(--muted); background: var(--surface);
+    border: 1px solid var(--line); padding: 5px 12px; border-radius: 999px;
+  }
+
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+    gap: 24px; padding-bottom: 80px;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    overflow: hidden; display: flex; flex-direction: column; position: relative;
+    transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, border-color .25s;
+    box-shadow: 0 1px 2px rgba(40,28,12,.04);
+    animation: cardIn .5s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .card::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; z-index: 3;
+    background: linear-gradient(90deg, var(--saffron), var(--brass));
+    transform: scaleX(0); transform-origin: left; transition: transform .35s ease;
+  }
+  .card:hover::before { transform: scaleX(1); }
+  .card:hover {
+    transform: translateY(-6px); border-color: rgba(217,162,75,.55);
+    box-shadow: 0 22px 44px rgba(40,28,12,.16), 0 6px 14px rgba(232,115,46,.10);
+  }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .grid .card:nth-child(1) { animation-delay: .02s; }
+  .grid .card:nth-child(2) { animation-delay: .06s; }
+  .grid .card:nth-child(3) { animation-delay: .10s; }
+  .grid .card:nth-child(4) { animation-delay: .14s; }
+  .grid .card:nth-child(5) { animation-delay: .18s; }
+  .grid .card:nth-child(6) { animation-delay: .22s; }
+  .grid .card:nth-child(7) { animation-delay: .26s; }
+  .grid .card:nth-child(8) { animation-delay: .30s; }
+  .card .thumb {
+    aspect-ratio: 4/3;
+    background: radial-gradient(circle at 50% 35%, var(--surface-2), #ecdfca);
+    display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
+  }
+  .card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+  .card:hover .thumb img { transform: scale(1.05); }
+  .card .thumb .ph { font-size: 60px; opacity: .55; filter: drop-shadow(0 4px 8px rgba(40,28,12,.12)); }
+  .card .pill {
+    position: absolute; top: 11px; left: 11px;
+    background: rgba(28,24,20,.78); backdrop-filter: blur(4px);
+    color: #f3ead9; font-size: 10.5px; text-transform: uppercase; font-weight: 600;
+    letter-spacing: .09em; padding: 5px 10px; border-radius: 999px;
+  }
+  .card .body { padding: 17px 17px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .card .name { font-weight: 700; font-size: 16px; letter-spacing: -.01em; }
+  .card .desc { font-size: 13px; color: var(--muted); line-height: 1.5; flex: 1; }
+  .card .row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; gap: 10px; }
+  .card .price {
+    font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 600; color: var(--text);
+  }
+  .add-btn {
+    background: var(--ink); color: #f3ead9; border: none; border-radius: 10px;
+    padding: 9px 15px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: background .18s, transform .12s; white-space: nowrap;
+  }
+  .add-btn:hover { background: linear-gradient(150deg, var(--saffron), var(--brass-deep)); transform: translateY(-1px); }
+
+  .empty {
+    grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--muted);
+  }
+  .empty .big { font-size: 52px; margin-bottom: 14px; opacity: .5; }
+
+  /* Modal */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(24,18,12,.58); backdrop-filter: blur(3px);
+    z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px;
+    animation: fade .2s ease;
+  }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--surface); border-radius: 22px; width: 100%; max-width: 480px;
+    max-height: 90vh; overflow-y: auto; padding: 34px;
+    border: 1px solid var(--line); box-shadow: 0 30px 70px rgba(24,18,12,.4);
+    animation: rise .26s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+  .modal.wide { max-width: 640px; }
+  .modal h3 {
+    font-family: 'Fraunces', Georgia, serif; font-size: 25px; font-weight: 600;
+    margin-bottom: 6px; letter-spacing: -.01em;
+  }
+  .modal .sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 7px; }
+  .field input, .field textarea, .field select {
+    width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    font: inherit; font-size: 14px; background: var(--surface-2); color: var(--text);
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .field textarea { resize: vertical; min-height: 74px; }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    outline: none; border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(232,115,46,.14);
+  }
+  .modal-actions { display: flex; gap: 10px; margin-top: 26px; }
+  .choice-card {
+    display: flex; align-items: center; gap: 14px; width: 100%; text-align: left;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px; margin-bottom: 12px; cursor: pointer; font: inherit; color: var(--text);
+    transition: border-color .18s, transform .12s, box-shadow .18s;
+  }
+  .choice-card:hover { border-color: var(--brass); transform: translateY(-2px); box-shadow: 0 10px 22px rgba(40,28,12,.1); }
+  .choice-card:last-of-type { margin-bottom: 0; }
+  .choice-ic {
+    width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; font-size: 22px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(150deg, rgba(217,162,75,.25), rgba(232,115,46,.2));
+  }
+  .choice-t { display: block; font-weight: 700; font-size: 15.5px; margin-bottom: 3px; }
+  .choice-d { display: block; font-size: 13px; color: var(--muted); line-height: 1.45; }
+  .choice-arrow { margin-left: auto; color: var(--brass-deep); font-size: 20px; flex-shrink: 0; }
+  .modal-actions .btn-primary, .modal-actions .btn-ghost { flex: 1; }
+  .close-x {
+    float: right; background: var(--surface-2); border: 1px solid var(--line);
+    width: 32px; height: 32px; border-radius: 9px; font-size: 18px; cursor: pointer;
+    color: var(--muted); line-height: 1; margin: -6px -6px 0 0; transition: color .15s, border-color .15s;
+  }
+  .close-x:hover { color: var(--danger); border-color: var(--danger); }
+  .err { color: var(--danger); font-size: 13px; margin-top: -6px; margin-bottom: 12px; }
+
+  /* Cart items */
+  .cart-line {
+    display: flex; gap: 13px; align-items: center; padding: 14px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .cart-line .ci-thumb {
+    width: 58px; height: 58px; border-radius: 12px;
+    background: radial-gradient(circle at 50% 35%, var(--surface-2), #ecdfca);
+    display: flex; align-items: center; justify-content: center; font-size: 25px;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .cart-line .ci-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .cart-line .ci-info { flex: 1; }
+  .cart-line .ci-name { font-weight: 600; font-size: 14px; }
+  .cart-line .ci-price { font-size: 13px; color: var(--muted); }
+  .qty { display: flex; align-items: center; gap: 9px; }
+  .qty button {
+    width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--surface-2); cursor: pointer; font-size: 15px; line-height: 1; color: var(--text);
+    transition: border-color .15s;
+  }
+  .qty button:hover { border-color: var(--brass); }
+  .remove { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 13px; }
+  .cart-total {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin: 20px 0; font-size: 15px; padding-top: 14px;
+  }
+  .cart-total .amt { font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 600; color: var(--text); }
+  .cart-subline { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); padding: 3px 0; }
+  .cart-subline.disc { color: var(--brass-deep); font-weight: 600; }
+
+  /* Discount code entry (cart) */
+  .code-box { margin: 18px 0 2px; }
+  .code-row { display: flex; gap: 8px; }
+  .code-input {
+    flex: 1; border: 1.5px dashed var(--brass); border-radius: 11px;
+    padding: 11px 14px; font: inherit; font-size: 14px; letter-spacing: .05em;
+    text-transform: uppercase; background: var(--surface-2); color: var(--text);
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .code-input::placeholder { letter-spacing: normal; text-transform: none; color: var(--muted); }
+  .code-input:focus { outline: none; border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(232,115,46,.14); }
+  .code-applied {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: linear-gradient(150deg, rgba(217,162,75,.20), rgba(232,115,46,.12));
+    border: 1px solid rgba(217,162,75,.55); border-radius: 12px; padding: 10px 14px;
+  }
+  .code-applied .ca-info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .code-tag { font-weight: 700; letter-spacing: .04em; color: var(--brass-deep); }
+  .code-off {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    color: #fff; background: var(--brass-deep); padding: 3px 9px; border-radius: 999px;
+  }
+
+  /* Admin */
+  .admin-tabs { display: flex; gap: 6px; margin-bottom: 24px; border-bottom: 1px solid var(--line); }
+  .admin-tabs button {
+    background: none; border: none; font: inherit; font-size: 15px; padding: 12px 16px;
+    cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color .15s;
+  }
+  .admin-tabs button.active { color: var(--text); font-weight: 600; border-bottom-color: var(--saffron); }
+  .admin-item {
+    display: flex; gap: 14px; align-items: center; background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 10px;
+    transition: border-color .15s;
+  }
+  .admin-item:hover { border-color: var(--brass); }
+  .admin-item .ai-thumb {
+    width: 62px; height: 62px; border-radius: 11px;
+    background: radial-gradient(circle at 50% 35%, var(--surface), #ecdfca);
+    display: flex; align-items: center; justify-content: center; font-size: 27px;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .admin-item .ai-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .cust-avatar {
+    width: 48px; height: 48px; border-radius: 999px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; color: #fff;
+    background: linear-gradient(150deg, var(--brass), var(--saffron));
+  }
+  .admin-item .ai-info { flex: 1; }
+  .admin-item .ai-name { font-weight: 600; }
+  .admin-item .ai-meta { font-size: 13px; color: var(--muted); }
+  .order-card {
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px; margin-bottom: 14px;
+  }
+  .order-card.unread { border-left: 3px solid var(--saffron); background: linear-gradient(90deg, rgba(232,115,46,.06), var(--surface-2) 40%); }
+  .order-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+  .order-head .who { font-weight: 600; }
+  .order-head .when { font-size: 12px; color: var(--muted); }
+  .order-line { font-size: 14px; padding: 4px 0; display: flex; justify-content: space-between; }
+  .new-badge {
+    background: var(--saffron); color: #fff; font-size: 10px; text-transform: uppercase;
+    letter-spacing: .08em; padding: 3px 8px; border-radius: 999px; margin-left: 8px; font-weight: 700;
+  }
+  .eta-chip {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+    color: var(--brass-deep); background: rgba(217,162,75,.16); border: 1px solid rgba(217,162,75,.4);
+    padding: 5px 11px; border-radius: 999px;
+  }
+
+  .img-preview {
+    width: 100%; aspect-ratio: 16/9; border-radius: 12px; object-fit: cover;
+    margin-top: 10px; border: 1px solid var(--line);
+  }
+  .file-label {
+    display: inline-block; padding: 10px 15px; border: 1.5px dashed var(--brass);
+    border-radius: 11px; font-size: 13px; cursor: pointer; color: var(--brass-deep);
+    background: var(--surface-2); font-weight: 600; transition: background .15s;
+  }
+  .file-label:hover { background: rgba(217,162,75,.12); }
+  .editor-frame {
+    position: relative; overflow: hidden; border-radius: 14px; background: #1c1814;
+    cursor: grab; touch-action: none; box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .editor-frame:active { cursor: grabbing; }
+  .editor-mask {
+    position: absolute; inset: 0; pointer-events: none;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,.9);
+  }
+  .editor-mask.round { border-radius: 999px; box-shadow: inset 0 0 0 2px rgba(255,255,255,.9), 0 0 0 999px rgba(28,24,20,.45); }
+  input[type=range] { accent-color: var(--saffron); height: 4px; }
+  .toast {
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: #f3ead9; padding: 13px 22px; border-radius: 12px;
+    font-size: 14px; z-index: 200; box-shadow: 0 12px 30px rgba(24,18,12,.4);
+    animation: pop .25s ease; display: flex; align-items: center; gap: 9px;
+    border: 1px solid rgba(217,162,75,.3);
+  }
+  @keyframes pop { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+  .badge-user { font-size: 13px; color: var(--muted); }
+  .link-btn { background: none; border: none; color: var(--brass-deep); cursor: pointer; font: inherit; font-size: 14px; font-weight: 600; }
+  .link-btn:hover { text-decoration: underline; }
+
+  /* Stock badges */
+  .stock-badge {
+    position: absolute; bottom: 11px; left: 11px;
+    background: rgba(28,24,20,.82); color: #f3ead9; font-size: 10.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em; padding: 5px 10px; border-radius: 999px;
+  }
+  .stock-badge.out { background: var(--danger); }
+  .stock-low { font-size: 12px; color: var(--danger); font-weight: 600; }
+  .card.is-out .thumb { opacity: .65; }
+  .add-btn:disabled { opacity: .55; cursor: not-allowed; }
+  .add-btn:disabled:hover { background: var(--ink); transform: none; }
+
+  /* Catalog toolbar (sort + price filter) */
+  .toolbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: -8px 0 22px; }
+  .toolbar .tb-group { display: flex; align-items: center; gap: 8px; }
+  .toolbar label { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+  .toolbar select, .toolbar .price-in {
+    border: 1px solid var(--line); border-radius: 10px; padding: 8px 11px;
+    font: inherit; font-size: 13.5px; background: var(--surface); color: var(--text);
+  }
+  .toolbar select:focus, .toolbar .price-in:focus { outline: none; border-color: var(--saffron); }
+  .toolbar .price-in { width: 92px; }
+
+  /* Order status chips + admin selector */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700;
+    padding: 4px 11px; border-radius: 999px; text-transform: uppercase; letter-spacing: .05em;
+  }
+  .st-new       { background: var(--saffron); color: #fff; }
+  .st-accepted  { background: rgba(217,162,75,.22); color: var(--brass-deep); border: 1px solid rgba(217,162,75,.5); }
+  .st-packed    { background: rgba(217,162,75,.32); color: var(--brass-deep); border: 1px solid rgba(217,162,75,.55); }
+  .st-out       { background: rgba(232,115,46,.20); color: var(--saffron); border: 1px solid rgba(232,115,46,.5); }
+  .st-delivered { background: rgba(58,140,80,.18); color: #4caf6a; border: 1px solid rgba(58,140,80,.45); }
+  .st-cancelled { background: rgba(184,68,47,.14); color: var(--danger); border: 1px solid rgba(184,68,47,.4); }
+  .status-select {
+    border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px;
+    font: inherit; font-size: 13px; background: var(--surface); color: var(--text); cursor: pointer;
+  }
+
+  /* Customer status stepper */
+  .stepper { display: flex; align-items: flex-start; margin: 6px 0 14px; }
+  .step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; text-align: center; }
+  .step .dot {
+    width: 24px; height: 24px; border-radius: 999px; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; background: var(--surface); border: 2px solid var(--line); color: var(--muted); z-index: 2;
+  }
+  .step.done .dot { background: linear-gradient(150deg, var(--saffron), var(--brass-deep)); border-color: transparent; color: #fff; }
+  .step.current .dot { border-color: var(--saffron); color: var(--saffron); box-shadow: 0 0 0 3px rgba(232,115,46,.16); }
+  .step .lbl { font-size: 9.5px; color: var(--muted); margin-top: 5px; line-height: 1.2; max-width: 66px; }
+  .step.done .lbl, .step.current .lbl { color: var(--text); font-weight: 600; }
+  .step .line { position: absolute; top: 11px; left: 50%; width: 100%; height: 2px; background: var(--line); z-index: 1; }
+  .step.done .line { background: var(--brass); }
+  .step:last-child .line { display: none; }
+
+  /* Shop footer */
+  .footer { border-top: 1px solid var(--line); background: var(--surface); margin-top: 20px; padding: 34px 0 44px; }
+  .footer .f-grid { display: flex; flex-wrap: wrap; gap: 26px 48px; }
+  .footer .f-brand { min-width: 200px; }
+  .footer .f-name { font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; }
+  .footer .f-tag { font-size: 11px; text-transform: uppercase; letter-spacing: .18em; color: var(--brass-deep); font-weight: 600; margin-top: 4px; }
+  .footer .f-col h4 { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 10px; font-weight: 700; }
+  .footer .f-row { font-size: 14px; color: var(--text); margin-bottom: 8px; line-height: 1.5; }
+  .footer a { color: var(--brass-deep); text-decoration: none; font-weight: 600; }
+  .footer a:hover { text-decoration: underline; }
+  .wa-btn {
+    background: #25d366; color: #06351b; border: none; border-radius: 11px;
+    padding: 11px 16px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    transition: transform .12s, box-shadow .18s; box-shadow: 0 6px 16px rgba(37,211,102,.28);
+  }
+  .wa-btn:hover { transform: translateY(-1px); box-shadow: 0 9px 22px rgba(37,211,102,.36); }
+
+  /* Product detail modal */
+  .pd-hero {
+    width: 100%; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; position: relative;
+    background: radial-gradient(circle at 50% 35%, var(--surface-2), #ecdfca);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+  }
+  :root[data-theme="dark"] .pd-hero { background: radial-gradient(circle at 50% 35%, var(--surface-2), var(--ink-2)); }
+  .pd-hero img { width: 100%; height: 100%; object-fit: cover; }
+  .pd-hero .ph { font-size: 92px; opacity: .55; }
+  .qstep { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
+  .qstep button { width: 40px; height: 40px; border: none; background: var(--surface-2); color: var(--text); font-size: 20px; cursor: pointer; }
+  .qstep button:disabled { opacity: .4; cursor: not-allowed; }
+  .qstep .qn { min-width: 46px; text-align: center; font-weight: 700; font-size: 15px; }
+
+  /* Dashboard overview stats */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 12px; margin-bottom: 22px; }
+  .stat-card { background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+  .stat-card .sv { font-family: 'Fraunces', Georgia, serif; font-size: 26px; font-weight: 600; }
+  .stat-card .sl { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 4px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .card:hover { transform: none; }
+  }
+
+  @media (max-width: 720px) {
+    nav { gap: 12px; }
+    .cats {
+      flex: 1 1 100%; order: 3; flex-wrap: nowrap; overflow-x: auto;
+      -webkit-overflow-scrolling: touch; padding-bottom: 2px;
+    }
+    .cats::-webkit-scrollbar { height: 0; }
+    .cat-btn { white-space: nowrap; flex-shrink: 0; }
+    .actions { margin-left: auto; }
+    .hero { padding: 36px 0 40px; }
+    .hero .hero-stats { gap: 24px; }
+  }
+  @media (max-width: 420px) {
+    .logo .tag { display: none; }
+    .logo .mark { font-size: 22px; }
+  }
+
+  /* ---- Phone browsers ---- */
+  @media (max-width: 600px) {
+    .wrap { padding: 0 16px; }
+    .logo .mark { font-size: 18px; }
+    .overlay { padding: 12px; }
+    .modal { padding: 22px 18px; border-radius: 18px; }
+    .modal h3 { font-size: 22px; }
+    .section-head { margin: 30px 0 16px; }
+    .section-head h2 { font-size: 23px; }
+    .grid { gap: 16px; padding-bottom: 56px; }
+    /* the dashboard's tabs scroll sideways instead of wrapping into a tangle */
+    .admin-tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .admin-tabs::-webkit-scrollbar { height: 0; }
+    .admin-tabs button { white-space: nowrap; flex-shrink: 0; padding: 12px 13px; }
+    .step .lbl { font-size: 9px; max-width: 52px; }
+    .footer { padding: 28px 0 40px; }
+    .footer .f-grid { gap: 22px 30px; }
+    .toast { max-width: calc(100vw - 24px); }
+    .pd-hero .ph { font-size: 72px; }
+  }
+  /* 16px form text stops iOS Safari from zooming in when a field gets focus */
+  @media (max-width: 480px) {
+    input, select, textarea { font-size: 16px !important; }
+  }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script type="text/babel-disabled">
+</script>
+<script>
+const { useState, useEffect, useRef } = React;
+const e = React.createElement;
+
+// Hosted on a normal web server there is no injected window.storage, so fall back to
+// the browser's own localStorage — data then persists on each visitor's device.
+if (typeof window !== "undefined" && !window.storage) {
+  window.storage = {
+    get: async (k) => { try { const v = localStorage.getItem(k); return v === null ? null : { value: v }; } catch { return null; } },
+    set: async (k, v) => { try { localStorage.setItem(k, v); } catch (err) {} },
+  };
+}
+
+const DEFAULT_CATEGORIES = ["Cookware", "Utensils", "Mixers", "Cookers", "Bakeware", "Storage"];
+const EMOJI = { Cookware:"🍳", Utensils:"🥄", Mixers:"🌀", Cookers:"🍲", Bakeware:"🧁", Storage:"🫙" };
+const FALLBACK_EMOJI = "🍴";
+const DEFAULT_PIN = "admin123"; // initial admin password — change it from the dashboard
+const DEFAULT_SETTINGS = {
+  logo: null, categories: DEFAULT_CATEGORIES, promo: null, codes: [],
+  shop: { phone:"9167972686", whatsapp:"9167972686", address:"Bhandup West, Mumbai", hours:"Open 8 AM – 6 PM", maps:"https://maps.app.goo.gl/p9mpYxC4tWteExAx5" },
+  charges: { deliveryFee:50, freeAbove:500, minOrder:0, gstPercent:18 },
+};
+// promo shape: { text, on, percent } — banner text + a store-wide % off all items when on
+// codes shape: [{ code, percent, active }] — discount codes a customer can enter in the cart
+// shop: contact details shown in the footer + used for WhatsApp ordering
+// charges: deliveryFee, freeAbove (free-delivery threshold), minOrder, gstPercent
+const STORE_VERSION = "1"; // bump this and redeploy to push an updated catalog/settings to returning visitors
+
+// ---- storage helpers ----
+async function loadPin() {
+  try {
+    const r = await window.storage.get("store:adminpin", true);
+    return r ? r.value : DEFAULT_PIN;
+  } catch { return DEFAULT_PIN; }
+}
+async function savePin(pin) {
+  try { await window.storage.set("store:adminpin", pin, true); } catch(e){ console.error(e); }
+}
+async function loadSettings() {
+  try {
+    const r = await window.storage.get("store:settings", true);
+    const s = r ? JSON.parse(r.value) : {};
+    return { ...DEFAULT_SETTINGS, ...s,
+      categories: (s.categories && s.categories.length) ? s.categories : DEFAULT_CATEGORIES };
+  } catch { return DEFAULT_SETTINGS; }
+}
+async function saveSettings(s) {
+  try { await window.storage.set("store:settings", JSON.stringify(s), true); } catch(e){ console.error(e); }
+}
+async function loadItems() {
+  try {
+    const r = await window.storage.get("store:items", true);
+    return r ? JSON.parse(r.value) : null;
+  } catch { return null; }
+}
+async function saveItems(items) {
+  try { await window.storage.set("store:items", JSON.stringify(items), true); } catch(e){ console.error(e); }
+}
+async function loadOrders() {
+  try {
+    const r = await window.storage.get("store:orders", true);
+    return r ? JSON.parse(r.value) : [];
+  } catch { return []; }
+}
+async function saveOrders(orders) {
+  try { await window.storage.set("store:orders", JSON.stringify(orders), true); } catch(e){ console.error(e); }
+}
+async function loadTheme() {
+  try {
+    const r = await window.storage.get("ui:theme", true);
+    return (r && (r.value === "dark" || r.value === "light")) ? r.value : "light";
+  } catch { return "light"; }
+}
+async function saveTheme(t) {
+  try { await window.storage.set("ui:theme", t, true); } catch(e){ console.error(e); }
+}
+// the signed-in customer is remembered on this device so they don't re-enter details each visit
+async function loadCustomer() {
+  try {
+    const r = await window.storage.get("ui:customer", true);
+    const u = r ? JSON.parse(r.value) : null;
+    return (u && u.email) ? u : null;
+  } catch { return null; }
+}
+async function saveCustomer(u) {
+  try { await window.storage.set("ui:customer", JSON.stringify(u), true); } catch(e){ console.error(e); }
+}
+async function clearCustomer() {
+  try { await window.storage.set("ui:customer", "null", true); } catch(e){ console.error(e); }
+}
+
+// format a number as Indian rupees with comma grouping, e.g. 12500 -> ₹12,500
+function rupees(n) {
+  return "₹" + Number(n||0).toLocaleString('en-IN');
+}
+// the store-wide sale percent currently in effect (0 if none/off)
+function salePercent(settings) {
+  const p = settings && settings.promo;
+  if (p && p.on && Number(p.percent) > 0 && Number(p.percent) < 100) return Number(p.percent);
+  return 0;
+}
+// effective discount % for an item = larger of its own discount and the store-wide sale
+function effectiveDiscount(it, settings) {
+  const own = Number(it.discount) || 0;
+  const sale = salePercent(settings);
+  const d = Math.max(own > 0 && own < 100 ? own : 0, sale);
+  return d > 0 && d < 100 ? d : 0;
+}
+// final price after the effective discount (rounded to whole rupees)
+function finalPrice(it, settings) {
+  const d = effectiveDiscount(it, settings);
+  return d > 0 ? Math.round(it.price * (1 - d/100)) : it.price;
+}
+function hasDiscount(it, settings) {
+  return effectiveDiscount(it, settings) > 0;
+}
+function catEmoji(cat) { return EMOJI[cat] || FALLBACK_EMOJI; }
+// look up an active discount code by its text (case-insensitive); returns the matching code object or null
+function findActiveCode(settings, input) {
+  const c = (input || "").trim().toLowerCase();
+  if (!c) return null;
+  const codes = (settings && settings.codes) || [];
+  return codes.find(x => x.active && (x.code || "").trim().toLowerCase() === c) || null;
+}
+// stricter email check: local@domain.tld, a 2+ char TLD, and no spaces
+function isValidEmail(email) {
+  return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test((email || "").trim());
+}
+// validate an Indian mobile number; returns the normalized 10-digit string, or null if invalid.
+// accepts spaces/dashes and an optional +91 / 91 / 0 prefix; mobile numbers start with 6–9.
+function normalizePhone(input) {
+  let d = (input || "").replace(/\D/g, "");
+  if (d.length === 12 && d.startsWith("91")) d = d.slice(2);
+  else if (d.length === 11 && d.startsWith("0")) d = d.slice(1);
+  return /^[6-9]\d{9}$/.test(d) ? d : null;
+}
+// pretty-print a stored 10-digit number as "+91 XXXXX XXXXX"
+function fmtPhone(p) {
+  const d = (p || "").replace(/\D/g, "");
+  const ten = d.length > 10 ? d.slice(-10) : d;
+  return ten.length === 10 ? "+91 " + ten.slice(0, 5) + " " + ten.slice(5) : (p || "");
+}
+
+// ---- order status workflow ----
+const ORDER_FLOW = ["new", "accepted", "packed", "out", "delivered"];
+const STATUS_META = {
+  new:       { label:"New",              emoji:"🆕" },
+  accepted:  { label:"Accepted",         emoji:"✅" },
+  packed:    { label:"Packed",           emoji:"📦" },
+  out:       { label:"Out for delivery", emoji:"🚚" },
+  delivered: { label:"Delivered",        emoji:"🎉" },
+  cancelled: { label:"Cancelled",        emoji:"✖" },
+};
+function orderStatus(o) { return (o && o.status) || "new"; }
+function statusLabel(k) { return (STATUS_META[k] || STATUS_META.new).label; }
+function nextStatus(k) { const i = ORDER_FLOW.indexOf(k); return (i >= 0 && i < ORDER_FLOW.length - 1) ? ORDER_FLOW[i + 1] : null; }
+
+// ---- stock / availability ----
+function itemStock(it) { return Number.isFinite(it && it.stock) ? it.stock : null; } // null = untracked (always available)
+function isAvailable(it) { return !it || it.available !== false; }
+function inStock(it) { const s = itemStock(it); return s == null || s > 0; }
+
+// ---- charges + totals ----
+function orderCharges(settings) {
+  const c = (settings && settings.charges) || {};
+  const pct = Number(c.gstPercent);
+  return {
+    deliveryFee: Math.max(0, Number(c.deliveryFee) || 0),
+    freeAbove:   Math.max(0, Number(c.freeAbove)   || 0),
+    minOrder:    Math.max(0, Number(c.minOrder)    || 0),
+    gstPercent:  (pct > 0 && pct < 100) ? pct : 0,
+  };
+}
+// given a goods subtotal (already after item / store-wide discounts), apply a code %, delivery fee and GST
+function computeTotals(subtotal, settings, codePercent) {
+  const ch = orderCharges(settings);
+  const codeDiscount = codePercent > 0 ? Math.round(subtotal * codePercent / 100) : 0;
+  const afterDiscount = Math.max(0, subtotal - codeDiscount);
+  const deliveryFee = afterDiscount <= 0 ? 0
+    : (ch.freeAbove > 0 && afterDiscount >= ch.freeAbove ? 0 : ch.deliveryFee);
+  const gstAmount = ch.gstPercent > 0 ? Math.round(afterDiscount * ch.gstPercent / 100) : 0;
+  return { subtotal, codeDiscount, afterDiscount, deliveryFee, gstAmount,
+    gstPercent: ch.gstPercent, freeAbove: ch.freeAbove, minOrder: ch.minOrder,
+    total: afterDiscount + deliveryFee + gstAmount };
+}
+
+// ---- WhatsApp ordering ----
+function waLink(num10, text) {
+  const d = (num10 || "").replace(/\D/g, "").slice(-10);
+  if (d.length !== 10) return null;
+  return "https://wa.me/91" + d + (text ? ("?text=" + encodeURIComponent(text)) : "");
+}
+function orderToText(order, settings) {
+  const lines = order.lines.map(l => "• " + l.qty + " × " + l.name + " — " + rupees(l.price * l.qty)).join("\n");
+  let t = "Hello Maa Santoshi Steel Center, I'd like to place this order:\n\n" + lines +
+    "\n\nSubtotal: " + rupees(order.subtotal != null ? order.subtotal : order.total);
+  if (order.codeDiscount) t += "\nCode " + order.code + " (-" + order.codePercent + "%): -" + rupees(order.codeDiscount);
+  if (order.deliveryFee) t += "\nDelivery: " + rupees(order.deliveryFee);
+  if (order.gstAmount) t += "\nGST (" + order.gstPercent + "%): " + rupees(order.gstAmount);
+  t += "\nTotal: " + rupees(order.total) + "\n\nName: " + (order.name || order.customer || "");
+  if (order.phone) t += "\nPhone: " + fmtPhone(order.phone);
+  if (order.address) t += "\nDeliver to: " + order.address;
+  return t;
+}
+
+// ---- CSV export of orders (for bookkeeping) ----
+function csvCell(v) { const s = String(v == null ? "" : v); return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function ordersToCSV(orders) {
+  const head = ["Order ID","Date","Customer","Phone","Email","Address","Items","Subtotal","Code","Discount","Delivery","GST","Total","Status"];
+  const rows = orders.map(o => [
+    o.id, o.when, o.name || o.customer || "", o.phone ? ("+91" + o.phone) : "", o.email || "",
+    (o.address || "").replace(/\s+/g, " "),
+    (o.lines || []).map(l => l.qty + "x " + l.name).join("; "),
+    o.subtotal != null ? o.subtotal : o.total, o.code || "", o.codeDiscount || 0,
+    o.deliveryFee || 0, o.gstAmount || 0, o.total, statusLabel(orderStatus(o)),
+  ]);
+  return [head, ...rows].map(r => r.map(csvCell).join(",")).join("\r\n");
+}
+
+// Default brand mark: a stylised steel pot with handles + lid steam, drawn in white
+function LogoMark() {
+  return e('svg', {viewBox:'0 0 48 48', fill:'none', xmlns:'http://www.w3.org/2000/svg', 'aria-hidden':'true'},
+    // steam
+    e('path', {d:'M19 9c0-2 2-2 2-4M27 9c0-2 2-2 2-4', stroke:'#fff', strokeWidth:'2', strokeLinecap:'round', opacity:'.85'}),
+    // lid
+    e('path', {d:'M14 17h20a1 1 0 0 1 1 1v1H13v-1a1 1 0 0 1 1-1Z', fill:'#fff'}),
+    e('circle', {cx:'24', cy:'14.5', r:'1.6', fill:'#fff'}),
+    // pot body
+    e('path', {d:'M13 21h22l-1.4 13.5A4 4 0 0 1 29.6 38H18.4a4 4 0 0 1-4-3.5L13 21Z', fill:'#fff'}),
+    // handles
+    e('path', {d:'M13 23.5H9.5a2.5 2.5 0 0 0 0 5H13M35 23.5h3.5a2.5 2.5 0 0 1 0 5H35', stroke:'#fff', strokeWidth:'2.4', strokeLinecap:'round'})
+  );
+}
+
+const SEED = [
+  { id:"s1", name:"Copper Core Sauté Pan", cat:"Cookware", price:10999, desc:"Tri-ply stainless with a copper core for even, responsive heat.", img:null },
+  { id:"s2", name:"Acacia Spoon Set", cat:"Utensils", price:2899, desc:"Hand-finished wooden spoons that won't scratch your pans.", img:null },
+  { id:"s3", name:"Stand Mixer 5.5Q", cat:"Mixers", price:24999, desc:"10-speed tilt-head mixer with a stainless bowl and dough hook.", img:null },
+  { id:"s4", name:"8-in-1 Pressure Cooker", cat:"Cookers", price:9999, desc:"Pressure cook, slow cook, steam, and sauté in one pot.", img:null },
+  { id:"s5", name:"Nonstick Bake Set", cat:"Bakeware", price:4199, desc:"Warp-resistant sheet pans and loaf tins for everyday baking.", img:null },
+  { id:"s6", name:"Glass Canister Trio", cat:"Storage", price:3299, desc:"Airtight borosilicate jars with bamboo lids for pantry staples.", img:null },
+];
+
+function App() {
+  const [items, setItems] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [filter, setFilter] = useState("All");
+  const [cart, setCart] = useState([]); // {id, qty}
+  const [modal, setModal] = useState(null); // 'cart','login','admin','adminLogin','addItem'
+  const [user, setUser] = useState(null); // {name,email}
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminPin, setAdminPin] = useState(DEFAULT_PIN);
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+  const [search, setSearch] = useState("");
+  const [toast, setToast] = useState("");
+  const [editItem, setEditItem] = useState(null);
+  const [seenDeliveries, setSeenDeliveries] = useState([]); // ids of delivery updates the customer has viewed
+  const [acctOpen, setAcctOpen] = useState(false); // account dropdown menu
+  const [appliedCode, setAppliedCode] = useState(null); // {code, percent} entered by the customer in the cart
+  const [theme, setTheme] = useState("light"); // 'light' | 'dark' — customer-selectable
+  const [viewItem, setViewItem] = useState(null); // product open in the detail modal
+  const [sort, setSort] = useState("featured");   // catalog sort order
+  const [priceMin, setPriceMin] = useState("");
+  const [priceMax, setPriceMax] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      // republish the baked catalog + settings when STORE_VERSION is bumped (leaves existing data intact on first run)
+      const ver = await window.storage.get("store:version", true);
+      if (ver && ver.value && ver.value !== STORE_VERSION) { await saveItems(SEED); await saveSettings(DEFAULT_SETTINGS); }
+      if (!ver || !ver.value || ver.value !== STORE_VERSION) { await window.storage.set("store:version", STORE_VERSION, true); }
+      let it = await loadItems();
+      if (!it) { it = SEED; await saveItems(SEED); }
+      setItems(it);
+      setOrders(await loadOrders());
+      setAdminPin(await loadPin());
+      setSettings(await loadSettings());
+      setTheme(await loadTheme());
+      setUser(await loadCustomer());
+    })();
+  }, []);
+
+  // reflect the chosen theme on <html> so the [data-theme="dark"] CSS variables take effect
+  useEffect(() => {
+    if (typeof document !== "undefined") document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  const showToast = (m) => { setToast(m); setTimeout(()=>setToast(""), 2600); };
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next); saveTheme(next);
+  };
+
+  const goHome = () => {
+    setFilter("All");
+    setSearch("");
+    setModal(null);
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const refreshOrders = async () => setOrders(await loadOrders());
+
+  const addToCart = (id, n=1) => {
+    const it = items?.find(i=>i.id===id);
+    if (!it || !inStock(it)) { showToast("Out of stock"); return; }
+    const stock = itemStock(it);
+    const cur = cart.find(x=>x.id===id)?.qty || 0;
+    let add = n;
+    if (stock != null) add = Math.min(n, Math.max(0, stock - cur));
+    if (add <= 0) { showToast("Only " + stock + " in stock"); return; }
+    setCart(c => {
+      const f = c.find(x=>x.id===id);
+      if (f) return c.map(x=>x.id===id?{...x,qty:x.qty+add}:x);
+      return [...c, {id, qty:add}];
+    });
+    showToast(add>1 ? ("Added " + add + " to cart") : "Added to cart");
+  };
+  const setQty = (id, d) => setCart(c => c.map(x=>{
+    if (x.id!==id) return x;
+    const it = items?.find(i=>i.id===id);
+    const stock = it ? itemStock(it) : null;
+    let q = Math.max(1, x.qty + d);
+    if (stock != null && q > stock) q = Math.max(1, stock);
+    return {...x, qty:q};
+  }));
+  const removeCart = (id) => setCart(c => c.filter(x=>x.id!==id));
+
+  const cartCount = cart.reduce((s,x)=>s+x.qty,0);
+  const cartItems = cart.map(c => ({...c, item: items?.find(i=>i.id===c.id)})).filter(x=>x.item);
+  const cartTotal = cartItems.reduce((s,x)=>s+finalPrice(x.item, settings)*x.qty,0);
+  // full breakdown: code discount, delivery fee, GST, and the payable total
+  const totals = computeTotals(cartTotal, settings, appliedCode ? appliedCode.percent : 0);
+  const applyCode = (input) => {
+    const found = findActiveCode(settings, input);
+    if (!found) return "That code isn’t valid or is no longer active.";
+    setAppliedCode({ code: (found.code || "").trim().toUpperCase(), percent: Number(found.percent) || 0 });
+    return null; // success
+  };
+  const removeCode = () => setAppliedCode(null);
+
+  const placeOrder = async (via) => {
+    if (!user || !user.address || !user.address.trim()) return; // safety: address required
+    if (cartItems.length === 0) return;
+    // re-check the code at submit time in case the admin disabled it after it was applied
+    const valid = appliedCode ? findActiveCode(settings, appliedCode.code) : null;
+    const pct = valid ? (Number(valid.percent) || 0) : 0;
+    const t = computeTotals(cartTotal, settings, pct);
+    if (t.minOrder > 0 && t.afterDiscount < t.minOrder) { showToast("Minimum order is " + rupees(t.minOrder)); return; }
+    const order = {
+      id: "o"+Date.now(),
+      customer: user.name || user.email, name: user.name || "", email: user.email, phone: user.phone || "", address: user.address.trim(),
+      lines: cartItems.map(x=>({id:x.item.id, name:x.item.name, qty:x.qty, price:finalPrice(x.item, settings)})),
+      subtotal: t.subtotal,
+      code: pct > 0 ? (valid.code || "").trim().toUpperCase() : null,
+      codePercent: pct, codeDiscount: t.codeDiscount,
+      deliveryFee: t.deliveryFee, gstPercent: t.gstPercent, gstAmount: t.gstAmount,
+      total: t.total,
+      status: "new", statusAt: new Date().toLocaleString(),
+      when: new Date().toLocaleString(), read: false,
+    };
+    const next = [order, ...orders];
+    setOrders(next); await saveOrders(next);
+    // decrement tracked stock for the items just ordered
+    let nextItems = items;
+    cartItems.forEach(x => { nextItems = nextItems.map(it => (it.id===x.item.id && itemStock(it)!=null) ? {...it, stock: Math.max(0, it.stock - x.qty)} : it); });
+    setItems(nextItems); await saveItems(nextItems);
+    setCart([]); setAppliedCode(null); setModal(null);
+    if (via === "whatsapp") {
+      const link = waLink(settings.shop && settings.shop.whatsapp, orderToText(order, settings));
+      if (link && typeof window !== "undefined") window.open(link, "_blank");
+      showToast(link ? "Order saved — opening WhatsApp…" : "Order sent — the shop has been notified");
+    } else {
+      showToast("Order sent — the shop has been notified");
+    }
+  };
+
+  const saveAddress = (addr) => setUser(u => { const n = {...u, address: addr}; saveCustomer(n); return n; });
+
+  // restore stock when an order is cancelled (matches lines by item id)
+  const restoreStock = async (lines) => {
+    if (!Array.isArray(lines)) return;
+    let next = items;
+    lines.forEach(l => { next = next.map(it => (l.id && it.id===l.id && itemStock(it)!=null) ? {...it, stock: it.stock + (l.qty||0)} : it); });
+    setItems(next); await saveItems(next);
+  };
+  const setOrderStatus = async (orderId, status) => {
+    const o = orders.find(x=>x.id===orderId);
+    if (!o) return;
+    const wasCancelled = orderStatus(o) === "cancelled";
+    const next = orders.map(x => x.id===orderId ? {...x, status, statusAt: new Date().toLocaleString()} : x);
+    setOrders(next); await saveOrders(next);
+    if (status === "cancelled" && !wasCancelled) await restoreStock(o.lines);
+    showToast("Order marked " + statusLabel(status));
+  };
+  // re-add a past order's items to the cart (skips removed / unavailable / out-of-stock lines)
+  const reorder = (order) => {
+    setCart(prev => {
+      let c = [...prev];
+      (order.lines||[]).forEach(l => {
+        const it = items.find(i => (l.id && i.id===l.id) || (i.name||"").toLowerCase() === (l.name||"").toLowerCase());
+        if (!it || !isAvailable(it)) return;
+        const stock = itemStock(it);
+        const ex = c.find(x=>x.id===it.id);
+        const cur = ex ? ex.qty : 0;
+        let add = l.qty || 1;
+        if (stock != null) add = Math.min(add, Math.max(0, stock - cur));
+        if (add <= 0) return;
+        c = ex ? c.map(x=>x.id===it.id?{...x,qty:x.qty+add}:x) : [...c, {id:it.id, qty:add}];
+      });
+      return c;
+    });
+    setModal("cart");
+    showToast("Added your previous items to the cart");
+  };
+
+  // admin: add / edit / delete
+  const upsertItem = async (data) => {
+    let next;
+    if (data.id && items.find(i=>i.id===data.id)) {
+      next = items.map(i=>i.id===data.id?data:i);
+    } else {
+      next = [{...data, id:"i"+Date.now()}, ...items];
+    }
+    setItems(next); await saveItems(next);
+    setModal(null); setEditItem(null);
+    showToast("Item saved");
+  };
+  const deleteItem = async (id) => {
+    const next = items.filter(i=>i.id!==id);
+    setItems(next); await saveItems(next);
+    showToast("Item removed");
+  };
+  const toggleAvailable = async (id) => {
+    const next = items.map(i => i.id===id ? {...i, available: i.available===false} : i);
+    setItems(next); await saveItems(next);
+    showToast(next.find(i=>i.id===id).available===false ? "Item hidden from store" : "Item shown in store");
+  };
+  const markRead = async () => {
+    const next = orders.map(o=>({...o, read:true}));
+    setOrders(next); await saveOrders(next);
+  };
+  const setDelivery = async (orderId, eta) => {
+    const next = orders.map(o => o.id===orderId
+      ? {...o, delivery: {...eta, sentAt: new Date().toLocaleString()}}
+      : o);
+    setOrders(next); await saveOrders(next);
+  };
+  const changePin = async (current, next) => {
+    if (current !== adminPin) return "Current password is incorrect.";
+    if (!next || next.length < 4) return "New password must be at least 4 characters.";
+    setAdminPin(next); await savePin(next);
+    return null; // success
+  };
+  const updateSettings = async (patch) => {
+    const next = { ...settings, ...patch };
+    setSettings(next); await saveSettings(next);
+  };
+  const deleteCustomer = async (email) => {
+    const next = orders.filter(o => o.email !== email);
+    setOrders(next); await saveOrders(next);
+    showToast("Customer removed");
+  };
+
+  // backup: bundle everything into a JSON file the admin can save to a folder
+  const exportData = async () => {
+    const backup = {
+      _app: "maa-santoshi-steel-center",
+      _version: 1,
+      exportedAt: new Date().toISOString(),
+      items, orders, settings, adminPin,
+    };
+    const json = JSON.stringify(backup, null, 2);
+    const stamp = new Date().toISOString().slice(0,10);
+    const filename = "store-backup-" + stamp + ".json";
+
+    // Modern browsers (Chrome/Edge): open a real "Save As" dialog so the admin
+    // can pick Desktop or any folder and choose the filename.
+    if (window.showSaveFilePicker) {
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: filename,
+          types: [{ description: "Store backup", accept: { "application/json": [".json"] } }],
+        });
+        const writable = await handle.createWritable();
+        await writable.write(json);
+        await writable.close();
+        showToast("Backup saved");
+        return;
+      } catch (err) {
+        if (err && err.name === "AbortError") return; // admin cancelled the dialog
+        // otherwise fall through to the standard download
+      }
+    }
+
+    // Fallback (Safari/Firefox): download to the browser's Downloads folder.
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    showToast("Backup downloaded");
+  };
+
+  // export just the orders as a CSV spreadsheet for bookkeeping
+  const exportOrdersCSV = async () => {
+    if (!orders.length) { showToast("No orders to export yet"); return; }
+    const csv = ordersToCSV(orders);
+    const filename = "orders-" + new Date().toISOString().slice(0,10) + ".csv";
+    if (window.showSaveFilePicker) {
+      try {
+        const handle = await window.showSaveFilePicker({ suggestedName: filename,
+          types: [{ description: "CSV spreadsheet", accept: { "text/csv": [".csv"] } }] });
+        const w = await handle.createWritable(); await w.write(csv); await w.close();
+        showToast("Orders exported"); return;
+      } catch (err) { if (err && err.name === "AbortError") return; }
+    }
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    showToast("Orders downloaded");
+  };
+
+  // restore: read a backup file and write it back into storage
+  const importData = (file) => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!data || data._app !== "maa-santoshi-steel-center" || !Array.isArray(data.items)) {
+          showToast("That file isn’t a valid store backup");
+          return;
+        }
+        setItems(data.items); await saveItems(data.items);
+        const ords = Array.isArray(data.orders) ? data.orders : [];
+        setOrders(ords); await saveOrders(ords);
+        const sett = data.settings ? { ...DEFAULT_SETTINGS, ...data.settings } : DEFAULT_SETTINGS;
+        setSettings(sett); await saveSettings(sett);
+        if (data.adminPin) { setAdminPin(data.adminPin); await savePin(data.adminPin); }
+        showToast("Backup restored");
+      } catch (err) {
+        showToast("Couldn’t read that file");
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // derive unique customers from orders (most recent first)
+  const customers = (() => {
+    const map = {};
+    orders.forEach(o => {
+      if (!map[o.email]) map[o.email] = { email:o.email, name:o.name||"", phone:o.phone||"", orders:0, total:0, last:o.when };
+      map[o.email].orders += 1;
+      map[o.email].total += o.total || 0;
+      if (!map[o.email].name && o.name) map[o.email].name = o.name;
+      if (!map[o.email].phone && o.phone) map[o.email].phone = o.phone;
+    });
+    return Object.values(map);
+  })();
+
+  const CATEGORIES = settings.categories || DEFAULT_CATEGORIES;
+  const q = search.trim().toLowerCase();
+  const pMin = parseFloat(priceMin), pMax = parseFloat(priceMax);
+  let shown = (items||[]).filter(i =>
+    isAvailable(i) &&
+    (filter==="All" || i.cat===filter) &&
+    (!q || (i.name+" "+(i.desc||"")+" "+i.cat).toLowerCase().includes(q)) &&
+    (isNaN(pMin) || finalPrice(i, settings) >= pMin) &&
+    (isNaN(pMax) || finalPrice(i, settings) <= pMax)
+  );
+  if (sort === "price-asc") shown = [...shown].sort((a,b)=>finalPrice(a,settings)-finalPrice(b,settings));
+  else if (sort === "price-desc") shown = [...shown].sort((a,b)=>finalPrice(b,settings)-finalPrice(a,settings));
+  else if (sort === "name") shown = [...shown].sort((a,b)=>a.name.localeCompare(b.name));
+  const unreadCount = orders.filter(o=>!o.read).length;
+  const myOrders = user ? orders.filter(o => o.email === user.email) : [];
+  const myDeliveryCount = myOrders.filter(o => o.delivery && !seenDeliveries.includes(o.id+o.delivery.sentAt)).length;
+
+  return e('div', null,
+    // header
+    e('header', null,
+      e('div', {className:'wrap'},
+        e('div', {className:'bar'},
+          e('div', {className:'logo', onClick:goHome},
+            e('span',{className:'crest'+(settings.logo?' has-img':'')},
+              settings.logo ? e('img',{src:settings.logo, alt:'Logo'}) : e(LogoMark)),
+            e('span', null,
+              e('span',{className:'mark'},'Maa Santoshi Steel Center'),
+              e('span',{className:'tag'},'Kitchenwares')
+            )
+          ),
+          e('nav', null,
+            e('div',{className:'cats'},
+              e('button',{className:'cat-btn'+(filter==="All"?" active":""), onClick:()=>setFilter("All")},'All'),
+              CATEGORIES.map(c=>e('button',{key:c, className:'cat-btn'+(filter===c?" active":""), onClick:()=>setFilter(c)}, c))
+            ),
+            e('div',{className:'actions'},
+              e('button',{className:'icon-btn', onClick:toggleTheme,
+                title:theme==='dark'?'Switch to light theme':'Switch to dark theme',
+                'aria-label':'Toggle light or dark theme'}, theme==='dark'?'☀️':'🌙'),
+              e('button',{className:'icon-btn', onClick:()=>setModal('cart')}, '🛒',
+                cartCount>0 && e('span',{className:'cart-count'}, cartCount)
+              ),
+              isAdmin && e('button',{className:'icon-btn', onClick:()=>setModal('admin')}, '⚙ Dashboard',
+                unreadCount>0 && e('span',{className:'cart-count'}, unreadCount)),
+              user && !isAdmin && e('button',{className:'icon-btn', onClick:()=>setModal('myorders')}, '📦 My orders',
+                myDeliveryCount>0 && e('span',{className:'cart-count'}, myDeliveryCount)),
+              (user || isAdmin)
+                ? e('div',{className:'acct-wrap'},
+                    e('button',{className:'icon-btn'+(acctOpen?' active':''), onClick:()=>setAcctOpen(o=>!o)},
+                      '👤 '+(isAdmin ? 'Admin' : (user.name || user.email.split('@')[0])),
+                      e('span',{className:'caret'}, acctOpen?'▴':'▾')),
+                    acctOpen && e('div',{className:'acct-menu'},
+                      e('div',{className:'acct-id'},
+                        e('div',{className:'acct-role'}, isAdmin ? 'Signed in as admin' : 'Signed in as customer'),
+                        e('div',{className:'acct-detail'}, isAdmin ? 'Administrator' : (user.name ? user.name : user.email)),
+                        (!isAdmin && user.name) && e('div',{className:'acct-sub'}, user.email)
+                      ),
+                      e('button',{className:'acct-signout', onClick:()=>{
+                        setAcctOpen(false);
+                        if(isAdmin){ setIsAdmin(false); }
+                        if(user){ setUser(null); clearCustomer(); }
+                        setModal(null); showToast("Signed out");
+                      }}, 'Sign out')
+                    )
+                  )
+                : e('button',{className:'btn-primary', onClick:()=>setModal('signinChoice')}, 'Sign in')
+            )
+          )
+        ),
+        e('div',{className:'searchrow'},
+          e('span',{className:'search-ic'}, '🔎'),
+          e('input',{className:'search-input', type:'search', value:search,
+            onChange:ev=>setSearch(ev.target.value),
+            placeholder:'Search cookware, mixers, cookers…'}),
+          search && e('button',{className:'search-clear', onClick:()=>setSearch(""), title:'Clear search'}, '×')
+        )
+      )
+    ),
+    // hero
+    filter==="All" && e('div',{className:'hero'},
+      e('div',{className:'hero-deco'}, '🍳'),
+      e('div',{className:'wrap'},
+        e('h1', null, 'Tools that make the ', e('em',null,'everyday meal'), ' feel like a craft.'),
+        (settings.promo && settings.promo.on && (settings.promo.text || Number(settings.promo.percent)>0)) &&
+          e('div',{className:'promo-banner'},
+            e('span',{className:'promo-tag'}, Number(settings.promo.percent)>0 ? (Number(settings.promo.percent)+'% OFF') : 'Offer'),
+            e('span', null, settings.promo.text ||
+              ('Store-wide sale — flat '+Number(settings.promo.percent)+'% off every item!'))
+          ),
+        e('div',{className:'hero-stats'},
+          e('div',{className:'stat'}, e('div',{className:'n'}, (items?items.length:0)+'+'), e('div',{className:'l'}, 'Pieces in stock')),
+          e('div',{className:'stat'}, e('div',{className:'n'}, CATEGORIES.length), e('div',{className:'l'}, 'Categories')),
+          e('div',{className:'stat'}, e('div',{className:'n'}, 'Free'), e('div',{className:'l'}, 'List & enquire'))
+        )
+      )
+    ),
+    // grid
+    e('div',{className:'wrap'},
+      e('div',{className:'section-head'},
+        e('h2', null, q ? 'Search results' : (filter==="All" ? "Everything in the kitchen" : filter)),
+        e('span',{className:'count'}, shown.length + (shown.length===1?" item":" items"))
+      ),
+      items!==null && (items.length>0) && e('div',{className:'toolbar'},
+        e('div',{className:'tb-group'},
+          e('label', null, 'Sort'),
+          e('select',{value:sort, onChange:ev=>setSort(ev.target.value)},
+            e('option',{value:'featured'}, 'Featured'),
+            e('option',{value:'price-asc'}, 'Price: low to high'),
+            e('option',{value:'price-desc'}, 'Price: high to low'),
+            e('option',{value:'name'}, 'Name: A–Z'))
+        ),
+        e('div',{className:'tb-group'},
+          e('label', null, 'Price ₹'),
+          e('input',{className:'price-in', type:'number', min:0, value:priceMin, onChange:ev=>setPriceMin(ev.target.value), placeholder:'Min'}),
+          e('span',{style:{color:'var(--muted)'}}, '–'),
+          e('input',{className:'price-in', type:'number', min:0, value:priceMax, onChange:ev=>setPriceMax(ev.target.value), placeholder:'Max'})
+        ),
+        (sort!=='featured'||priceMin!==''||priceMax!=='') &&
+          e('button',{className:'link-btn', onClick:()=>{setSort('featured');setPriceMin('');setPriceMax('');}}, 'Reset')
+      ),
+      items===null
+        ? e('div',{className:'empty'}, 'Loading the shelves…')
+        : e('div',{className:'grid'},
+            shown.length===0
+              ? e('div',{className:'empty'}, e('div',{className:'big'}, q?'🔍':'🍽'),
+                  q ? ('No items match “'+search.trim()+'”.') : 'Nothing here yet. Check back soon.')
+              : shown.map(it => e(Card, {key:it.id, it, settings, onAdd:()=>addToCart(it.id), onView:()=>{setViewItem(it); setModal('product');}}))
+          )
+    ),
+    e(Footer, {settings}),
+    // modals
+    modal==='signinChoice' && e(SignInChoice, {
+      onClose:()=>setModal(null),
+      onCustomer:()=>setModal('login'),
+      onAdmin:()=>setModal('adminLogin')
+    }),
+    modal==='cart' && e(CartModal, {cartItems, cartTotal, totals, appliedCode, setQty, removeCart, settings,
+      onApplyCode:applyCode, onRemoveCode:removeCode,
+      onClose:()=>setModal(null), user, onSignIn:()=>setModal('login'), onPlace:placeOrder,
+      onSaveAddress:saveAddress, onToast:showToast}),
+    modal==='login' && e(LoginModal, {onClose:()=>setModal(null), onLogin:(u)=>{setUser(u);saveCustomer(u);setModal(null);showToast("Welcome, "+u.name.split(' ')[0]);}}),
+    modal==='myorders' && e(MyOrders, {orders:myOrders, onReorder:reorder, onClose:()=>{
+      setSeenDeliveries(myOrders.filter(o=>o.delivery).map(o=>o.id+o.delivery.sentAt));
+      setModal(null);
+    }}),
+    modal==='product' && viewItem && e(ProductModal, {
+      it: (items||[]).find(i=>i.id===viewItem.id) || viewItem, settings,
+      inCartQty: (cart.find(x=>x.id===viewItem.id)||{}).qty || 0,
+      onAdd:(id,n)=>{ addToCart(id,n); setModal(null); },
+      onClose:()=>setModal(null)}),
+    modal==='adminLogin' && e(AdminLogin, {adminPin, onClose:()=>setModal(null), onOk:()=>{setIsAdmin(true);setModal('admin');showToast("Admin mode on");}}),
+    modal==='admin' && e(AdminDash, {items, orders, unreadCount, settings, customers,
+      onClose:()=>setModal(null),
+      onAdd:()=>{setEditItem(null);setModal('addItem');},
+      onEdit:(it)=>{setEditItem(it);setModal('addItem');},
+      onDelete:deleteItem, onToggleAvailable:toggleAvailable, onMarkRead:markRead, onChangePin:changePin,
+      onPinChanged:()=>showToast("Password updated"),
+      onSetDelivery:setDelivery, onDeliverySent:()=>showToast("Delivery time sent to customer"),
+      onSetStatus:setOrderStatus,
+      onUpdateSettings:updateSettings, onSettingsSaved:(m)=>showToast(m||"Saved"),
+      onDeleteCustomer:deleteCustomer,
+      onExport:exportData, onImport:importData, onExportCSV:exportOrdersCSV,
+      onLogout:()=>{setIsAdmin(false);setModal(null);showToast("Admin signed out");}}),
+    modal==='addItem' && e(ItemForm, {existing:editItem, categories:CATEGORIES, onClose:()=>setModal('admin'), onSave:upsertItem}),
+    toast && e('div',{className:'toast'}, toast)
+  );
+}
+
+function Card({it, settings, onAdd, onView}) {
+  const d = effectiveDiscount(it, settings);
+  const disc = d > 0;
+  const stock = itemStock(it);
+  const out = stock != null && stock <= 0;
+  const low = stock != null && stock > 0 && stock <= 5;
+  return e('div',{className:'card'+(out?' is-out':''), onClick:onView, style:{cursor:'pointer'}},
+    e('div',{className:'thumb'},
+      it.img ? e('img',{src:it.img, alt:it.name}) : e('span',{className:'ph'}, catEmoji(it.cat)),
+      e('span',{className:'pill'}, it.cat),
+      disc && e('span',{className:'disc-badge'}, '-'+d+'%'),
+      out && e('span',{className:'stock-badge out'}, 'Out of stock')
+    ),
+    e('div',{className:'body'},
+      e('div',{className:'name'}, it.name),
+      e('div',{className:'desc'}, it.desc),
+      low && e('div',{className:'stock-low'}, 'Only '+stock+' left'),
+      e('div',{className:'row'},
+        disc
+          ? e('span',{className:'price-wrap'},
+              e('span',{className:'price'}, rupees(finalPrice(it, settings))),
+              e('span',{className:'price-old'}, rupees(it.price))
+            )
+          : e('span',{className:'price'}, rupees(it.price)),
+        e('button',{className:'add-btn', disabled:out,
+          onClick:ev=>{ ev.stopPropagation(); onAdd(); }}, out?'Out of stock':'Add to cart')
+      )
+    )
+  );
+}
+
+function ProductModal({it, settings, inCartQty, onAdd, onClose}) {
+  const d = effectiveDiscount(it, settings);
+  const disc = d > 0;
+  const stock = itemStock(it);
+  const out = stock != null && stock <= 0;
+  const remaining = stock != null ? Math.max(0, stock - inCartQty) : null;
+  const cap = remaining != null ? Math.max(1, remaining) : 99;
+  const [qty, setQty] = useState(1);
+  const q = Math.min(qty, cap);
+  return e('div',{className:'overlay', onClick:onClose},
+    e('div',{className:'modal', onClick:ev=>ev.stopPropagation()},
+      e('button',{className:'close-x', onClick:onClose}, '×'),
+      e('div',{className:'pd-hero'},
+        it.img ? e('img',{src:it.img, alt:it.name}) : e('span',{className:'ph'}, catEmoji(it.cat)),
+        disc && e('span',{className:'disc-badge'}, '-'+d+'%'),
+        out && e('span',{className:'stock-badge out'}, 'Out of stock')
+      ),
+      e('span',{className:'pill', style:{position:'static', display:'inline-block', marginBottom:8}}, it.cat),
+      e('h3', null, it.name),
+      e('div',{style:{display:'flex', alignItems:'baseline', gap:10, margin:'4px 0 12px', flexWrap:'wrap'}},
+        e('span',{className:'price', style:{fontSize:26}}, rupees(finalPrice(it, settings))),
+        disc && e('span',{className:'price-old', style:{fontSize:16}}, rupees(it.price))
+      ),
+      e('p',{style:{fontSize:14.5, color:'var(--text)', lineHeight:1.6, marginBottom:14}}, it.desc),
+      stock != null && e('div',{style:{fontSize:13, fontWeight:600, marginBottom:16, color:(out||stock<=5)?'var(--danger)':'var(--muted)'}},
+        out ? 'Out of stock' : (stock<=5 ? ('Only '+stock+' left in stock') : (stock+' in stock'))),
+      out
+        ? e('button',{className:'btn-primary', style:{width:'100%'}, disabled:true}, 'Out of stock')
+        : e('div',{style:{display:'flex', gap:12, alignItems:'center'}},
+            e('div',{className:'qstep'},
+              e('button',{onClick:()=>setQty(v=>Math.max(1,v-1)), disabled:q<=1}, '−'),
+              e('span',{className:'qn'}, q),
+              e('button',{onClick:()=>setQty(v=>Math.min(cap,v+1)), disabled:q>=cap}, '+')
+            ),
+            e('button',{className:'btn-primary', style:{flex:1}, onClick:()=>onAdd(it.id, q)}, 'Add to cart')
+          ),
+      remaining != null && !out && inCartQty>0 && e('p',{style:{fontSize:12.5, color:'var(--muted)', marginTop:10}}, inCartQty+' already in your cart')
+    )
+  );
+}
+
+// read-only progress stepper shown to the customer in My Orders
+function StatusStepper({status}) {
+  if (status === "cancelled")
+    return e('div',{style:{marginBottom:12}}, e('span',{className:'status-chip st-cancelled'}, '✖ Cancelled'));
+  const cur = Math.max(0, ORDER_FLOW.indexOf(status));
+  return e('div',{className:'stepper'},
+    ORDER_FLOW.map((k,i)=>e('div',{key:k, className:'step'+(i<cur?' done':(i===cur?' current':''))},
+      e('div',{className:'line'}),
+      e('div',{className:'dot'}, i<cur?'✓':String(i+1)),
+      e('div',{className:'lbl'}, STATUS_META[k].label)
+    ))
+  );
+}
+
+function Footer({settings}) {
+  const shop = settings.shop || {};
+  const hasContact = shop.phone || shop.whatsapp || shop.address || shop.hours || shop.maps;
+  const wa = shop.whatsapp ? waLink(shop.whatsapp, "Hello Maa Santoshi Steel Center, I have a question.") : null;
+  return e('footer',{className:'footer'},
+    e('div',{className:'wrap'},
+      e('div',{className:'f-grid'},
+        e('div',{className:'f-brand'},
+          e('div',{className:'f-name'}, 'Maa Santoshi Steel Center'),
+          e('div',{className:'f-tag'}, 'Kitchenwares'),
+          wa && e('a',{href:wa, target:'_blank', rel:'noopener', style:{display:'inline-block', marginTop:14}},
+            e('span',{className:'wa-btn'}, '💬 Chat on WhatsApp'))
+        ),
+        (shop.phone || shop.whatsapp || shop.hours) && e('div',{className:'f-col'},
+          e('h4', null, 'Reach us'),
+          shop.phone && e('div',{className:'f-row'}, '📞 ', e('a',{href:'tel:+91'+(shop.phone||'').replace(/\D/g,'').slice(-10)}, fmtPhone(shop.phone))),
+          shop.whatsapp && e('div',{className:'f-row'}, '💬 ', e('a',{href:wa, target:'_blank', rel:'noopener'}, fmtPhone(shop.whatsapp))),
+          shop.hours && e('div',{className:'f-row'}, '🕒 '+shop.hours)
+        ),
+        (shop.address || shop.maps) && e('div',{className:'f-col'},
+          e('h4', null, 'Visit'),
+          shop.address && e('div',{className:'f-row', style:{whiteSpace:'pre-wrap', maxWidth:280}}, shop.address),
+          shop.maps && e('div',{className:'f-row'}, e('a',{href:shop.maps, target:'_blank', rel:'noopener'}, '📍 Open in Maps'))
+        )
+      )
+    )
+  );
+}
+
+function CartModal({cartItems, cartTotal, totals, appliedCode, setQty, removeCart, settings, onApplyCode, onRemoveCode, onClose, user, onSignIn, onPlace, onSaveAddress, onToast}) {
+  const hasAddress = !!(user && user.address && user.address.trim());
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState((user && user.address) || "");
+  const [addrErr, setAddrErr] = useState("");
+  const [codeInput, setCodeInput] = useState(appliedCode ? appliedCode.code : "");
+  const [codeErr, setCodeErr] = useState("");
+  const ch = orderCharges(settings);
+  const belowMin = ch.minOrder > 0 && totals.afterDiscount < ch.minOrder;
+  const waNumber = settings.shop && settings.shop.whatsapp;
+  const applyCodeNow = () => {
+    const err = onApplyCode(codeInput);
+    if (err) { setCodeErr(err); return; }
+    setCodeErr(""); onToast && onToast("Discount applied");
+  };
+
+  const saveAddr = () => {
+    if (!draft.trim()) { setAddrErr("Please enter a delivery address."); return; }
+    onSaveAddress(draft.trim());
+    setEditing(false); setAddrErr("");
+    onToast && onToast("Address saved");
+  };
+
+  const confirmBlock = () => {
+    if (!user) {
+      return e('button',{className:'btn-primary', style:{width:'100%'}, onClick:onSignIn}, 'Sign in to confirm order');
+    }
+    // signed in but no address, or actively editing → show address form
+    if (!hasAddress || editing) {
+      return e('div', null,
+        e('div',{className:'field', style:{marginBottom:10}},
+          e('label',null,'Delivery address'),
+          e('textarea',{value:draft, onChange:ev=>setDraft(ev.target.value),
+            placeholder:'House / shop no., street, area, city, PIN code', style:{minHeight:84}, autoFocus:true})
+        ),
+        addrErr && e('div',{className:'err'}, addrErr),
+        e('div',{style:{display:'flex', gap:10}},
+          editing && hasAddress && e('button',{className:'btn-ghost', style:{flex:1}, onClick:()=>{setEditing(false);setDraft(user.address);setAddrErr("");}}, 'Cancel'),
+          e('button',{className:'btn-primary', style:{flex:1}, onClick:saveAddr}, 'Save address')
+        ),
+        !hasAddress && e('p',{style:{fontSize:12.5, color:'var(--muted)', marginTop:10, textAlign:'center'}},
+          'Add a delivery address to confirm your order.')
+      );
+    }
+    // signed in with address → show it and allow confirm
+    return e('div', null,
+      e('div',{style:{background:'var(--surface-2)', border:'1px solid var(--line)', borderRadius:12, padding:'12px 14px', marginBottom:14}},
+        e('div',{style:{display:'flex', justifyContent:'space-between', alignItems:'baseline', gap:8}},
+          e('span',{style:{fontSize:12, textTransform:'uppercase', letterSpacing:'.1em', color:'var(--brass-deep)', fontWeight:600}}, 'Deliver to'),
+          e('button',{className:'link-btn', style:{fontSize:13}, onClick:()=>{setDraft(user.address);setEditing(true);}}, 'Edit')
+        ),
+        e('div',{style:{fontSize:14, marginTop:6, lineHeight:1.45, whiteSpace:'pre-wrap'}}, user.address),
+        user.phone && e('div',{style:{fontSize:13, marginTop:8, color:'var(--muted)'}}, '📞 '+fmtPhone(user.phone))
+      ),
+      belowMin && e('div',{className:'err', style:{textAlign:'center'}},
+        'Minimum order is '+rupees(ch.minOrder)+'. Add '+rupees(ch.minOrder-totals.afterDiscount)+' more to continue.'),
+      e('button',{className:'btn-primary', style:{width:'100%'}, disabled:belowMin, onClick:()=>onPlace('app')}, 'Confirm & notify shop'),
+      waNumber && e('button',{className:'wa-btn', style:{width:'100%', marginTop:10, opacity:belowMin?.5:1, cursor:belowMin?'not-allowed':'pointer'}, disabled:belowMin, onClick:()=>onPlace('whatsapp')}, '💬 Send order on WhatsApp')
+    );
+  };
+
+  return e('div',{className:'overlay', onClick:onClose},
+    e('div',{className:'modal', onClick:ev=>ev.stopPropagation()},
+      e('button',{className:'close-x', onClick:onClose}, '×'),
+      e('h3', null, 'Your cart'),
+      e('p',{className:'sub'}, 'Confirm your list and we’ll notify the shop directly.'),
+      cartItems.length===0
+        ? e('div',{style:{padding:'30px 0', color:'var(--muted)', textAlign:'center'}}, 'Your cart is empty.')
+        : e('div', null,
+            cartItems.map(x => e('div',{key:x.id, className:'cart-line'},
+              e('div',{className:'ci-thumb'}, x.item.img?e('img',{src:x.item.img}):catEmoji(x.item.cat)),
+              e('div',{className:'ci-info'},
+                e('div',{className:'ci-name'}, x.item.name),
+                e('div',{className:'ci-price'},
+                  rupees(finalPrice(x.item, settings))+' each',
+                  hasDiscount(x.item, settings) && e('span',{className:'price-old', style:{marginLeft:6}}, rupees(x.item.price))
+                )
+              ),
+              e('div',{className:'qty'},
+                e('button',{onClick:()=>setQty(x.id,-1)}, '−'),
+                e('span', null, x.qty),
+                e('button',{onClick:()=>setQty(x.id,1)}, '+')
+              ),
+              e('button',{className:'remove', onClick:()=>removeCart(x.id)}, 'Remove')
+            )),
+            e('div',{className:'code-box'},
+              appliedCode
+                ? e('div',{className:'code-applied'},
+                    e('span',{className:'ca-info'},
+                      e('span',{className:'code-tag'}, '🏷️ '+appliedCode.code),
+                      e('span',{className:'code-off'}, appliedCode.percent+'% off')
+                    ),
+                    e('button',{className:'remove', onClick:()=>{ onRemoveCode(); setCodeInput(""); setCodeErr(""); }}, 'Remove')
+                  )
+                : e('div', null,
+                    e('div',{className:'code-row'},
+                      e('input',{className:'code-input', value:codeInput,
+                        onChange:ev=>{ setCodeInput(ev.target.value); setCodeErr(""); },
+                        onKeyDown:ev=>ev.key==='Enter'&&applyCodeNow(),
+                        placeholder:'Have a discount code?'}),
+                      e('button',{className:'btn-ghost', style:{padding:'11px 18px'}, onClick:applyCodeNow}, 'Apply')
+                    ),
+                    codeErr && e('div',{className:'err', style:{marginTop:8, marginBottom:0}}, codeErr)
+                  )
+            ),
+            (() => {
+              const showDelivery = ch.deliveryFee > 0;
+              const showGst = totals.gstPercent > 0;
+              const showBreak = !!appliedCode || showDelivery || showGst;
+              return e('div',{className:'cart-total', style:{flexDirection:'column', alignItems:'stretch'}},
+                showBreak && e('div',{className:'cart-subline'},
+                  e('span', null, 'Subtotal'), e('span', null, rupees(cartTotal))),
+                appliedCode && e('div',{className:'cart-subline disc'},
+                  e('span', null, 'Code '+appliedCode.code+' (−'+appliedCode.percent+'%)'),
+                  e('span', null, '−'+rupees(totals.codeDiscount))),
+                showDelivery && e('div',{className:'cart-subline'},
+                  e('span', null, 'Delivery'),
+                  e('span', null, totals.deliveryFee>0 ? rupees(totals.deliveryFee) : 'FREE')),
+                showGst && e('div',{className:'cart-subline'},
+                  e('span', null, 'GST ('+totals.gstPercent+'%)'), e('span', null, rupees(totals.gstAmount))),
+                e('div',{style:{display:'flex', justifyContent:'space-between', alignItems:'baseline',
+                  marginTop:showBreak?10:0, paddingTop:showBreak?10:0, borderTop:showBreak?'1px solid var(--line)':'none'}},
+                  e('span', null, showBreak ? 'Total' : 'Estimated total'),
+                  e('span',{className:'amt'}, rupees(totals.total))
+                ),
+                ch.freeAbove>0 && totals.deliveryFee>0 && e('div',{style:{fontSize:12, color:'var(--brass-deep)', marginTop:6, fontWeight:600}},
+                  'Add '+rupees(Math.max(0, ch.freeAbove-totals.afterDiscount))+' more for free delivery')
+              );
+            })(),
+            confirmBlock()
+          )
+    )
+  );
+}
+
+function MyOrders({orders, onReorder, onClose}) {
+  const etaText = (d) => d.num + " " + (d.num===1 ? d.unit.replace(/s$/,'') : d.unit);
+  return e('div',{className:'overlay', onClick:onClose},
+    e('div',{className:'modal', onClick:ev=>ev.stopPropagation()},
+      e('button',{className:'close-x', onClick:onClose}, '×'),
+      e('h3', null, 'My orders'),
+      e('p',{className:'sub'}, 'Track each order’s status and any delivery updates from the shop.'),
+      orders.length===0
+        ? e('div',{style:{padding:'30px 0', color:'var(--muted)', textAlign:'center'}}, 'You haven’t placed any orders yet.')
+        : orders.map(o=>{
+            const st = orderStatus(o);
+            const count = o.lines.reduce((s,l)=>s+l.qty,0);
+            const showBreak = (o.code && o.codePercent>0) || o.deliveryFee>0 || o.gstAmount>0;
+            return e('div',{key:o.id, className:'order-card'},
+              e('div',{className:'order-head'},
+                e('span',{className:'who'}, count+' item'+(count===1?'':'s')),
+                e('span',{className:'when'}, o.when)
+              ),
+              e(StatusStepper, {status: st}),
+              st!=='cancelled' && (o.delivery
+                ? e('div',{style:{display:'flex', alignItems:'center', gap:8, marginBottom:10, flexWrap:'wrap'}},
+                    e('span',{className:'eta-chip'}, '🚚 '+(st==='delivered'?'Delivered':'Arriving in '+etaText(o.delivery))),
+                    o.delivery.note && e('span',{style:{fontSize:13, color:'var(--muted)'}}, '— '+o.delivery.note)
+                  )
+                : e('div',{style:{fontSize:13, color:'var(--muted)', marginBottom:10}}, 'Delivery time not set yet — the shop will update you soon.')),
+              o.lines.map((l,i)=>e('div',{key:i, className:'order-line'},
+                e('span', null, l.qty+' × '+l.name),
+                e('span', null, rupees(l.price*l.qty))
+              )),
+              showBreak && e('div',{className:'order-line', style:{color:'var(--muted)'}},
+                e('span', null, 'Subtotal'), e('span', null, rupees(o.subtotal!=null?o.subtotal:o.total))),
+              o.code && o.codePercent>0 && e('div',{className:'order-line', style:{color:'var(--brass-deep)', fontWeight:600}},
+                e('span', null, '🏷️ '+o.code+' (−'+o.codePercent+'%)'),
+                e('span', null, '−'+rupees(o.codeDiscount||0))),
+              o.deliveryFee>0 && e('div',{className:'order-line', style:{color:'var(--muted)'}},
+                e('span', null, 'Delivery'), e('span', null, rupees(o.deliveryFee))),
+              o.gstAmount>0 && e('div',{className:'order-line', style:{color:'var(--muted)'}},
+                e('span', null, 'GST ('+o.gstPercent+'%)'), e('span', null, rupees(o.gstAmount))),
+              e('div',{className:'order-line', style:{fontWeight:600, borderTop:'1px solid var(--line)', marginTop:6, paddingTop:8}},
+                e('span', null, 'Total'), e('span', null, rupees(o.total))),
+              onReorder && e('button',{className:'btn-ghost', style:{marginTop:12, width:'100%'}, onClick:()=>onReorder(o)}, '🔁 Order again')
+            );
+          })
+    )
+  );
+}
+
+function SignInChoice({onClose, onCustomer, onAdmin}) {
+  return e('div',{className:'overlay', onClick:onClose},
+    e('div',{className:'modal', onClick:ev=>ev.stopPropagation()},
+      e('button',{className:'close-x', onClick:onClose}, '×'),
+      e('h3', null, 'Sign in'),
+      e('p',{className:'sub'}, 'How would you like to continue?'),
+      e('button',{className:'choice-card', onClick:onCustomer},
+        e('span',{className:'choice-ic'}, '🛒'),
+        e('span', null,
+          e('span',{className:'choice-t'}, 'Continue as customer'),
+          e('span',{className:'choice-d'}, 'Browse, build a cart, and place an order with just your email.')
+        ),
+        e('span',{className:'choice-arrow'}, '→')
+      ),
+      e('button',{className:'choice-card', onClick:onAdmin},
+        e('span',{className:'choice-ic'}, '⚙'),
+        e('span', null,
+          e('span',{className:'choice-t'}, 'Sign in as admin'),
+          e('span',{className:'choice-d'}, 'Manage products, view orders, and set delivery times. Password required.')
+        ),
+        e('span',{className:'choice-arrow'}, '→')
+      )
+    )
+  );
+}
+
+function LoginModal({onClose, onLogin}) {
+  const [name,setName]=useState(""), [email,setEmail]=useState(""), [phone,setPhone]=useState(""), [err,setErr]=useState("");
+  const submit=()=>{
+    if(!name.trim()){setErr("Please enter your name.");return;}
+    if(!email.trim()){setErr("Please enter your email.");return;}
+    if(!isValidEmail(email)){setErr("That email doesn’t look right — check for typos.");return;}
+    if(!phone.trim()){setErr("Please enter your phone number.");return;}
+    const ph=normalizePhone(phone);
+    if(!ph){setErr("Enter a valid 10-digit Indian mobile number (starting 6–9).");return;}
+    onLogin({name:name.trim(), email:email.trim(), phone:ph});
+  };
+  return e('div',{className:'overlay', onClick:onClose},
+    e('div',{className:'modal', onClick:ev=>ev.stopPropagation()},
+      e('button',{className:'close-x', onClick:onClose}, '×'),
+      e('h3', null, 'Sign in'),
+      e('p',{className:'sub'}, 'Your name, email, and phone — no password needed. The shop uses these to label and reach out about your order.'),
+      e('div',{className:'field'}, e('label',null,'Name'),
+        e('input',{value:name, onChange:ev=>{setName(ev.target.value); setErr("");},
+          placeholder:'e.g. Rahul Sharma', autoFocus:true})),
+      e('div',{className:'field'}, e('label',null,'Email'),
+        e('input',{type:'email', value:email, onChange:ev=>{setEmail(ev.target.value); setErr("");},
+          placeholder:'you@email.com'})),
+      e('div',{className:'field'}, e('label',null,'Phone number'),
+        e('div',{style:{display:'flex', alignItems:'stretch'}},
+          e('span',{style:{display:'inline-flex', alignItems:'center', padding:'0 12px', border:'1px solid var(--line)', borderRight:'none', borderRadius:'12px 0 0 12px', background:'var(--surface-2)', color:'var(--muted)', fontSize:14, fontWeight:600}}, '+91'),
+          e('input',{type:'tel', inputMode:'numeric', value:phone,
+            onChange:ev=>{setPhone(ev.target.value); setErr("");},
+            onKeyDown:ev=>ev.key==='Enter'&&submit(),
+            placeholder:'10-digit mobile number', style:{borderRadius:'0 12px 12px 0'}})
+        )),
+      err && e('div',{className:'err'}, err),
+      e('button',{className:'btn-primary', style:{width:'100%'}, onClick:submit}, 'Continue')
+    )
+  );
+}
+
+function AdminLogin({adminPin, onClose, onOk}) {
+  const [pin,setPin]=useState(""), [err,setErr]=useState("");
+  const submit=()=>{ if(pin===adminPin) onOk(); else setErr("Incorrect password."); };
+  return e('div',{className:'overlay', onClick:onClose},
+    e('div',{className:'modal', onClick:ev=>ev.stopPropagation()},
+      e('button',{className:'close-x', onClick:onClose}, '×'),
+      e('h3', null, 'Admin sign in'),
+      e('p',{className:'sub'}, 'Enter your password to manage items and view incoming orders.'),
+      e('div',{className:'field'}, e('label',null,'Password'),
+        e('input',{type:'password', value:pin, onChange:ev=>setPin(ev.target.value),
+          onKeyDown:ev=>ev.key==='Enter'&&submit(), placeholder:'••••••', autoFocus:true})),
+      err && e('div',{className:'err'}, err),
+      e('button',{className:'btn-primary', style:{width:'100%'}, onClick:submit}, 'Enter dashboard')
+    )
+  );
+}
+
+function OrderCard({o, onSetDelivery, onDeliverySent, onSetStatus}) {
+  const [open,setOpen]=useState(false);
+  const [num,setNum]=useState(o.delivery?.num || "");
+  const [unit,setUnit]=useState(o.delivery?.unit || "days");
+  const [note,setNote]=useState(o.delivery?.note || "");
+  const [err,setErr]=useState("");
+  const send = async () => {
+    const n = parseInt(num, 10);
+    if(isNaN(n) || n<=0){ setErr("Enter a number greater than 0."); return; }
+    setErr("");
+    await onSetDelivery(o.id, {num:n, unit, note:note.trim()});
+    setOpen(false); onDeliverySent();
+  };
+  const etaText = o.delivery
+    ? o.delivery.num + " " + (o.delivery.num===1 ? o.delivery.unit.replace(/s$/,'') : o.delivery.unit)
+    : null;
+  const st = orderStatus(o);
+  const showBreak = (o.code && o.codePercent>0) || o.deliveryFee>0 || o.gstAmount>0;
+  return e('div',{className:'order-card'+(o.read?'':' unread')},
+    e('div',{className:'order-head'},
+      e('span', null,
+        e('span',{className:'who'}, o.name || o.email),
+        o.name && e('span',{style:{fontSize:13, color:'var(--muted)', marginLeft:8}}, o.email),
+        o.phone && e('a',{href:'tel:+91'+o.phone, style:{fontSize:13, color:'var(--brass-deep)', fontWeight:600, marginLeft:8, textDecoration:'none'}}, '📞 '+fmtPhone(o.phone))
+      ),
+      e('span',{className:'when'}, o.when)
+    ),
+    e('div',{style:{display:'flex', alignItems:'center', gap:10, margin:'2px 0 12px', flexWrap:'wrap'}},
+      e('span',{className:'status-chip st-'+st}, STATUS_META[st].emoji+' '+statusLabel(st)),
+      e('select',{className:'status-select', value:st, onChange:ev=>onSetStatus(o.id, ev.target.value)},
+        ORDER_FLOW.map(k=>e('option',{key:k, value:k}, statusLabel(k)))
+          .concat(e('option',{key:'cancelled', value:'cancelled'}, 'Cancelled'))
+      ),
+      st!=='cancelled' && nextStatus(st) && e('button',{className:'link-btn', onClick:()=>onSetStatus(o.id, nextStatus(st))},
+        'Mark '+statusLabel(nextStatus(st))+' →')
+    ),
+    o.address && e('div',{style:{fontSize:13, color:'var(--text)', background:'var(--surface)', border:'1px solid var(--line)', borderRadius:10, padding:'9px 12px', marginBottom:10, lineHeight:1.45, whiteSpace:'pre-wrap'}},
+      e('span',{style:{textTransform:'uppercase', letterSpacing:'.1em', fontSize:11, color:'var(--brass-deep)', fontWeight:600, display:'block', marginBottom:3}}, 'Deliver to'),
+      o.address),
+    o.lines.map((l,i)=>e('div',{key:i, className:'order-line'},
+      e('span', null, l.qty+' × '+l.name),
+      e('span', null, rupees(l.price*l.qty))
+    )),
+    showBreak && e('div',{className:'order-line', style:{color:'var(--muted)'}},
+      e('span', null, 'Subtotal'), e('span', null, rupees(o.subtotal!=null?o.subtotal:o.total))),
+    o.code && o.codePercent>0 && e('div',{className:'order-line', style:{color:'var(--brass-deep)', fontWeight:600}},
+      e('span', null, '🏷️ '+o.code+' (−'+o.codePercent+'%)'),
+      e('span', null, '−'+rupees(o.codeDiscount||0))),
+    o.deliveryFee>0 && e('div',{className:'order-line', style:{color:'var(--muted)'}},
+      e('span', null, 'Delivery'), e('span', null, rupees(o.deliveryFee))),
+    o.gstAmount>0 && e('div',{className:'order-line', style:{color:'var(--muted)'}},
+      e('span', null, 'GST ('+o.gstPercent+'%)'), e('span', null, rupees(o.gstAmount))),
+    e('div',{className:'order-line', style:{fontWeight:600, borderTop:'1px solid var(--line)', marginTop:6, paddingTop:8}},
+      e('span', null, 'Total'), e('span', null, rupees(o.total))),
+    // delivery estimate area
+    e('div',{style:{marginTop:12, paddingTop:12, borderTop:'1px dashed var(--line)'}},
+      etaText && !open && e('div',{style:{display:'flex', alignItems:'center', gap:8, marginBottom:open?0:10, flexWrap:'wrap'}},
+        e('span',{className:'eta-chip'}, '🚚 Delivery in '+etaText),
+        o.delivery.note && e('span',{style:{fontSize:13, color:'var(--muted)'}}, '— '+o.delivery.note)
+      ),
+      !open
+        ? e('button',{className:'link-btn', onClick:()=>setOpen(true)}, etaText ? 'Update delivery time' : '+ Set delivery time')
+        : e('div',null,
+            e('div',{style:{fontSize:13, fontWeight:600, marginBottom:8}}, 'Tell the customer when it arrives'),
+            e('div',{style:{display:'flex', gap:8, marginBottom:8, flexWrap:'wrap'}},
+              e('input',{type:'number', min:1, value:num, onChange:ev=>setNum(ev.target.value),
+                placeholder:'e.g. 2', style:{width:90, border:'1px solid var(--line)', borderRadius:10, padding:'10px 12px', background:'var(--surface)', font:'inherit', fontSize:14}}),
+              e('select',{value:unit, onChange:ev=>setUnit(ev.target.value),
+                style:{border:'1px solid var(--line)', borderRadius:10, padding:'10px 12px', background:'var(--surface)', font:'inherit', fontSize:14}},
+                ['hours','days','weeks'].map(u=>e('option',{key:u, value:u}, u)))
+            ),
+            e('input',{value:note, onChange:ev=>setNote(ev.target.value),
+              placeholder:'Optional note (e.g. delivered between 4–6 PM)',
+              style:{width:'100%', border:'1px solid var(--line)', borderRadius:10, padding:'10px 12px', background:'var(--surface)', font:'inherit', fontSize:14, marginBottom:8}}),
+            err && e('div',{className:'err'}, err),
+            e('div',{style:{display:'flex', gap:8}},
+              e('button',{className:'btn-ghost', style:{flex:1, padding:'9px 14px'}, onClick:()=>{setOpen(false);setErr("");}}, 'Cancel'),
+              e('button',{className:'btn-primary', style:{flex:1, padding:'9px 14px'}, onClick:send}, 'Send to customer')
+            )
+          )
+    )
+  );
+}
+
+function StoreSettings({settings, items, onUpdateSettings, onSaved}) {
+  const [promoText,setPromoText]=useState(settings.promo?.text || "");
+  const [promoOn,setPromoOn]=useState(settings.promo?.on ?? true);
+  const [promoPct,setPromoPct]=useState(settings.promo?.percent || "");
+  const [promoErr,setPromoErr]=useState("");
+  const [newCat,setNewCat]=useState("");
+  const [catErr,setCatErr]=useState("");
+  const [newCode,setNewCode]=useState("");
+  const [newCodePct,setNewCodePct]=useState("");
+  const [codeErr,setCodeErr]=useState("");
+  const shop0 = settings.shop || {};
+  const [shopPhone,setShopPhone]=useState(shop0.phone||"");
+  const [shopWa,setShopWa]=useState(shop0.whatsapp||"");
+  const [shopHours,setShopHours]=useState(shop0.hours||"");
+  const [shopAddr,setShopAddr]=useState(shop0.address||"");
+  const [shopMaps,setShopMaps]=useState(shop0.maps||"");
+  const [shopErr,setShopErr]=useState("");
+  const ch0 = settings.charges || {};
+  const [deliveryFee,setDeliveryFee]=useState(ch0.deliveryFee||"");
+  const [freeAbove,setFreeAbove]=useState(ch0.freeAbove||"");
+  const [minOrder,setMinOrder]=useState(ch0.minOrder||"");
+  const [gstPercent,setGstPercent]=useState(ch0.gstPercent||"");
+  const [chargeErr,setChargeErr]=useState("");
+  const [rawLogo,setRawLogo]=useState(null);
+  const logoRef=useRef();
+  const cats = settings.categories || DEFAULT_CATEGORIES;
+  const codes = settings.codes || [];
+
+  const pickLogo=(ev)=>{
+    const f=ev.target.files[0]; if(!f) return;
+    if(f.size>4*1024*1024){ onSaved("Logo image too large — use one under 4MB."); return; }
+    const r=new FileReader(); r.onload=()=>setRawLogo(r.result); r.readAsDataURL(f);
+    ev.target.value="";
+  };
+  const addCat=()=>{
+    const c=newCat.trim();
+    if(!c){ setCatErr("Enter a category name."); return; }
+    if(cats.some(x=>x.toLowerCase()===c.toLowerCase())){ setCatErr("That category already exists."); return; }
+    onUpdateSettings({categories:[...cats, c]}); setNewCat(""); setCatErr(""); onSaved("Section added");
+  };
+  const removeCat=(c)=>{
+    const inUse=items.filter(i=>i.cat===c).length;
+    if(inUse>0){ onSaved("Can’t remove “"+c+"” — "+inUse+" item(s) use it."); return; }
+    onUpdateSettings({categories:cats.filter(x=>x!==c)}); onSaved("Section removed");
+  };
+  const savePromo=()=>{
+    setPromoErr("");
+    let pct = promoPct===""||promoPct===null ? 0 : parseFloat(promoPct);
+    if(isNaN(pct)||pct<0||pct>=100){ setPromoErr("Discount must be between 0 and 99%."); return; }
+    onUpdateSettings({promo:{text:promoText.trim(), on:promoOn, percent:pct}});
+    onSaved(promoOn && pct>0 ? ("Sale live — "+pct+"% off all items") : "Offer banner saved");
+  };
+  const addCode=()=>{
+    setCodeErr("");
+    const c=newCode.trim().toUpperCase();
+    if(!c){ setCodeErr("Enter a code."); return; }
+    if(/\s/.test(c)){ setCodeErr("Codes can’t contain spaces."); return; }
+    if(codes.some(x=>(x.code||"").toUpperCase()===c)){ setCodeErr("That code already exists."); return; }
+    const pct=parseFloat(newCodePct);
+    if(isNaN(pct)||pct<=0||pct>=100){ setCodeErr("Discount must be between 1 and 99%."); return; }
+    onUpdateSettings({codes:[...codes, {code:c, percent:pct, active:true}]});
+    setNewCode(""); setNewCodePct(""); onSaved("Code “"+c+"” added");
+  };
+  const toggleCode=(code)=>{
+    onUpdateSettings({codes:codes.map(x=>x.code===code?{...x, active:!x.active}:x)});
+  };
+  const removeCodeItem=(code)=>{
+    onUpdateSettings({codes:codes.filter(x=>x.code!==code)});
+    onSaved("Code “"+code+"” removed");
+  };
+  const saveShop=()=>{
+    setShopErr("");
+    const ph=shopPhone.trim(), wa=shopWa.trim();
+    if(ph && !normalizePhone(ph)){ setShopErr("Phone must be a valid 10-digit mobile number."); return; }
+    if(wa && !normalizePhone(wa)){ setShopErr("WhatsApp must be a valid 10-digit mobile number."); return; }
+    onUpdateSettings({shop:{ phone: ph?normalizePhone(ph):"", whatsapp: wa?normalizePhone(wa):"",
+      hours: shopHours.trim(), address: shopAddr.trim(), maps: shopMaps.trim() }});
+    onSaved("Shop details saved");
+  };
+  const saveCharges=()=>{
+    setChargeErr("");
+    const df=parseFloat(deliveryFee)||0, fa=parseFloat(freeAbove)||0, mo=parseFloat(minOrder)||0, gp=parseFloat(gstPercent)||0;
+    if(df<0||fa<0||mo<0){ setChargeErr("Amounts can’t be negative."); return; }
+    if(gp<0||gp>=100){ setChargeErr("GST must be between 0 and 99%."); return; }
+    onUpdateSettings({charges:{deliveryFee:df, freeAbove:fa, minOrder:mo, gstPercent:gp}});
+    onSaved("Delivery & charges saved");
+  };
+
+  return e('div', null,
+    // logo
+    e('div',{style:{fontWeight:700, marginBottom:6}}, 'Store logo'),
+    e('p',{style:{fontSize:13, color:'var(--muted)', marginBottom:12, lineHeight:1.5}},
+      'Upload an image for the header icon — you can zoom and reposition it to fit the square.'),
+    e('div',{style:{display:'flex', alignItems:'center', gap:14, marginBottom:8, flexWrap:'wrap'}},
+      e('div',{className:'logo-preview'}, settings.logo ? e('img',{src:settings.logo}) : e(LogoMark)),
+      e('label',{className:'file-label'}, settings.logo?'Change logo':'Upload logo',
+        e('input',{ref:logoRef, type:'file', accept:'image/*', style:{display:'none'}, onChange:pickLogo})),
+      settings.logo && e('button',{className:'link-btn', onClick:()=>setRawLogo(settings.logo)}, 'Adjust'),
+      settings.logo && e('button',{className:'remove', onClick:()=>{ onUpdateSettings({logo:null}); onSaved("Logo reset"); }}, 'Reset')
+    ),
+    e('div',{style:{borderTop:'1px solid var(--line)', margin:'22px 0'}}),
+    // sections
+    e('div',{style:{fontWeight:700, marginBottom:6}}, 'Sections (categories)'),
+    e('p',{style:{fontSize:13, color:'var(--muted)', marginBottom:12, lineHeight:1.5}},
+      'These appear as filters in the header. A section in use by an item can’t be removed.'),
+    e('div',{style:{display:'flex', flexWrap:'wrap', gap:8, marginBottom:12}},
+      cats.map(c=>e('span',{key:c, className:'cat-tag'},
+        c, e('button',{className:'cat-tag-x', title:'Remove', onClick:()=>removeCat(c)}, '×')))
+    ),
+    e('div',{style:{display:'flex', gap:8}},
+      e('input',{value:newCat, onChange:ev=>setNewCat(ev.target.value),
+        onKeyDown:ev=>ev.key==='Enter'&&addCat(), placeholder:'New section name',
+        style:{flex:1, border:'1px solid var(--line)', borderRadius:10, padding:'10px 12px', background:'var(--surface-2)', font:'inherit', fontSize:14}}),
+      e('button',{className:'btn-primary', style:{padding:'10px 16px'}, onClick:addCat}, 'Add')
+    ),
+    catErr && e('div',{className:'err', style:{marginTop:8}}, catErr),
+    e('div',{style:{borderTop:'1px solid var(--line)', margin:'22px 0'}}),
+    // promo banner
+    e('div',{style:{fontWeight:700, marginBottom:6}}, 'Home page sale & offer banner'),
+    e('p',{style:{fontSize:13, color:'var(--muted)', marginBottom:12, lineHeight:1.5}},
+      'Set a store-wide discount that applies to every item, and a banner message for the start page. When the sale is on, all prices show the reduced amount with the original struck through.'),
+    e('div',{style:{display:'flex', gap:10, alignItems:'flex-end'}},
+      e('div',{className:'field', style:{width:150, marginBottom:12}},
+        e('label',null,'Discount on all items (%)'),
+        e('input',{type:'number', min:0, max:99, value:promoPct, onChange:ev=>setPromoPct(ev.target.value), placeholder:'e.g. 15'})),
+      promoPct>0 && promoPct<100 && e('div',{style:{fontSize:13, color:'var(--brass-deep)', marginBottom:20, fontWeight:600}},
+        'Applies to all '+items.length+' item'+(items.length===1?'':'s'))
+    ),
+    e('div',{className:'field'},
+      e('label',null,'Banner message'),
+      e('input',{value:promoText, onChange:ev=>setPromoText(ev.target.value),
+        placeholder:'e.g. Diwali Sale — flat 15% off everything this week!'})),
+    e('label',{style:{display:'flex', alignItems:'center', gap:8, fontSize:14, marginBottom:8, cursor:'pointer'}},
+      e('input',{type:'checkbox', checked:promoOn, onChange:ev=>setPromoOn(ev.target.checked)}),
+      'Activate sale & show banner on the home page'),
+    e('p',{style:{fontSize:12.5, color:'var(--muted)', marginBottom:14, lineHeight:1.5}},
+      'Turning this off restores original prices instantly. An item’s own discount still applies if it’s larger than the sale.'),
+    promoErr && e('div',{className:'err'}, promoErr),
+    e('button',{className:'btn-primary', onClick:savePromo}, 'Save sale & banner'),
+    e('div',{style:{borderTop:'1px solid var(--line)', margin:'22px 0'}}),
+    // discount codes
+    e('div',{style:{fontWeight:700, marginBottom:6}}, 'Discount codes'),
+    e('p',{style:{fontSize:13, color:'var(--muted)', marginBottom:12, lineHeight:1.5}},
+      'Create codes customers can type into their cart. An active code takes its percentage off the cart total before the order is sent. Disable a code to switch it off without deleting it.'),
+    codes.length>0 && e('div',{style:{display:'flex', flexDirection:'column', gap:8, marginBottom:12}},
+      codes.map(c=>e('div',{key:c.code, className:'admin-item', style:{padding:'10px 12px', marginBottom:0}},
+        e('div',{className:'ai-info'},
+          e('div',{className:'ai-name'}, c.code,
+            e('span',{style:{marginLeft:8, fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.06em', padding:'3px 9px', borderRadius:999,
+              ...(c.active ? {background:'var(--saffron)', color:'#fff'} : {background:'var(--surface)', color:'var(--muted)', border:'1px solid var(--line)'})}},
+              c.active?'Active':'Inactive')),
+          e('div',{className:'ai-meta'}, c.percent+'% off the cart total')
+        ),
+        e('button',{className:'link-btn', onClick:()=>toggleCode(c.code)}, c.active?'Disable':'Enable'),
+        e('button',{className:'remove', style:{marginLeft:12}, onClick:()=>removeCodeItem(c.code)}, 'Delete')
+      ))
+    ),
+    e('div',{style:{display:'flex', gap:8, alignItems:'flex-start'}},
+      e('input',{value:newCode, onChange:ev=>{ setNewCode(ev.target.value.toUpperCase()); setCodeErr(""); },
+        onKeyDown:ev=>ev.key==='Enter'&&addCode(), placeholder:'CODE e.g. SAVE10',
+        style:{flex:1, border:'1px solid var(--line)', borderRadius:10, padding:'10px 12px', background:'var(--surface-2)', font:'inherit', fontSize:14, textTransform:'uppercase', letterSpacing:'.05em'}}),
+      e('input',{type:'number', min:1, max:99, value:newCodePct, onChange:ev=>{ setNewCodePct(ev.target.value); setCodeErr(""); },
+        onKeyDown:ev=>ev.key==='Enter'&&addCode(), placeholder:'% off',
+        style:{width:96, border:'1px solid var(--line)', borderRadius:10, padding:'10px 12px', background:'var(--surface-2)', font:'inherit', fontSize:14}}),
+      e('button',{className:'btn-primary', style:{padding:'10px 16px'}, onClick:addCode}, 'Add')
+    ),
+    codeErr && e('div',{className:'err', style:{marginTop:8}}, codeErr),
+    e('div',{style:{borderTop:'1px solid var(--line)', margin:'22px 0'}}),
+    // shop profile & contact
+    e('div',{style:{fontWeight:700, marginBottom:6}}, 'Shop profile & contact'),
+    e('p',{style:{fontSize:13, color:'var(--muted)', marginBottom:12, lineHeight:1.5}},
+      'Shown to customers in the page footer. The WhatsApp number also powers the “Send order on WhatsApp” button in the cart.'),
+    e('div',{style:{display:'flex', gap:10, flexWrap:'wrap'}},
+      e('div',{className:'field', style:{flex:'1 1 200px'}}, e('label',null,'Phone'),
+        e('input',{type:'tel', value:shopPhone, onChange:ev=>{setShopPhone(ev.target.value);setShopErr("");}, placeholder:'10-digit number'})),
+      e('div',{className:'field', style:{flex:'1 1 200px'}}, e('label',null,'WhatsApp number'),
+        e('input',{type:'tel', value:shopWa, onChange:ev=>{setShopWa(ev.target.value);setShopErr("");}, placeholder:'10-digit number'}))
+    ),
+    e('div',{className:'field'}, e('label',null,'Opening hours'),
+      e('input',{value:shopHours, onChange:ev=>setShopHours(ev.target.value), placeholder:'e.g. Mon–Sat, 10 AM – 8 PM'})),
+    e('div',{className:'field'}, e('label',null,'Shop address'),
+      e('textarea',{value:shopAddr, onChange:ev=>setShopAddr(ev.target.value), placeholder:'Street, area, city, PIN'})),
+    e('div',{className:'field'}, e('label',null,'Google Maps link (optional)'),
+      e('input',{value:shopMaps, onChange:ev=>setShopMaps(ev.target.value), placeholder:'https://maps.google.com/…'})),
+    shopErr && e('div',{className:'err'}, shopErr),
+    e('button',{className:'btn-primary', onClick:saveShop}, 'Save shop details'),
+    e('div',{style:{borderTop:'1px solid var(--line)', margin:'22px 0'}}),
+    // delivery, GST & minimum order
+    e('div',{style:{fontWeight:700, marginBottom:6}}, 'Delivery, GST & minimum order'),
+    e('p',{style:{fontSize:13, color:'var(--muted)', marginBottom:12, lineHeight:1.5}},
+      'Applied at checkout. Leave a field at 0 to switch it off. “Free above” waives delivery once the cart (after discounts) crosses that amount.'),
+    e('div',{style:{display:'flex', gap:10, flexWrap:'wrap'}},
+      e('div',{className:'field', style:{flex:'1 1 140px'}}, e('label',null,'Delivery fee (₹)'),
+        e('input',{type:'number', min:0, value:deliveryFee, onChange:ev=>{setDeliveryFee(ev.target.value);setChargeErr("");}, placeholder:'0'})),
+      e('div',{className:'field', style:{flex:'1 1 140px'}}, e('label',null,'Free delivery above (₹)'),
+        e('input',{type:'number', min:0, value:freeAbove, onChange:ev=>{setFreeAbove(ev.target.value);setChargeErr("");}, placeholder:'0'}))
+    ),
+    e('div',{style:{display:'flex', gap:10, flexWrap:'wrap'}},
+      e('div',{className:'field', style:{flex:'1 1 140px'}}, e('label',null,'Minimum order (₹)'),
+        e('input',{type:'number', min:0, value:minOrder, onChange:ev=>{setMinOrder(ev.target.value);setChargeErr("");}, placeholder:'0'})),
+      e('div',{className:'field', style:{flex:'1 1 140px'}}, e('label',null,'GST (%)'),
+        e('input',{type:'number', min:0, max:99, value:gstPercent, onChange:ev=>{setGstPercent(ev.target.value);setChargeErr("");}, placeholder:'0'}))
+    ),
+    chargeErr && e('div',{className:'err'}, chargeErr),
+    e('button',{className:'btn-primary', onClick:saveCharges}, 'Save delivery & charges'),
+    rawLogo && e(ImageEditor, {src:rawLogo, aspect:1, round:false,
+      onCancel:()=>setRawLogo(null),
+      onApply:(data)=>{ onUpdateSettings({logo:data}); setRawLogo(null); onSaved("Logo updated"); }})
+  );
+}
+
+function Overview({items, orders, onExportCSV}) {
+  const active = orders.filter(o=>orderStatus(o)!=='cancelled');
+  const revenue = active.reduce((s,o)=>s+(o.total||0),0);
+  const pending = orders.filter(o=>['new','accepted','packed','out'].indexOf(orderStatus(o))>=0).length;
+  const delivered = orders.filter(o=>orderStatus(o)==='delivered').length;
+  const top = (()=>{ const m={}; active.forEach(o=>(o.lines||[]).forEach(l=>{ m[l.name]=(m[l.name]||0)+l.qty; }));
+    return Object.keys(m).map(k=>[k,m[k]]).sort((a,b)=>b[1]-a[1]).slice(0,5); })();
+  const low = items.filter(i=>itemStock(i)!=null && itemStock(i)<=5);
+  return e('div', null,
+    e('div',{className:'stat-grid'},
+      e('div',{className:'stat-card'}, e('div',{className:'sv'}, rupees(revenue)), e('div',{className:'sl'}, 'Revenue')),
+      e('div',{className:'stat-card'}, e('div',{className:'sv'}, orders.length), e('div',{className:'sl'}, 'Total orders')),
+      e('div',{className:'stat-card'}, e('div',{className:'sv'}, pending), e('div',{className:'sl'}, 'In progress')),
+      e('div',{className:'stat-card'}, e('div',{className:'sv'}, delivered), e('div',{className:'sl'}, 'Delivered'))
+    ),
+    e('div',{style:{display:'flex', gap:24, flexWrap:'wrap'}},
+      e('div',{style:{flex:'1 1 240px'}},
+        e('div',{style:{fontWeight:700, marginBottom:10}}, 'Top products'),
+        top.length===0
+          ? e('div',{style:{fontSize:13, color:'var(--muted)'}}, 'No sales yet.')
+          : top.map((t,i)=>e('div',{key:i, className:'order-line'},
+              e('span', null, (i+1)+'. '+t[0]), e('span',{style:{fontWeight:600}}, t[1]+' sold')))
+      ),
+      e('div',{style:{flex:'1 1 240px'}},
+        e('div',{style:{fontWeight:700, marginBottom:10}}, 'Low stock'),
+        low.length===0
+          ? e('div',{style:{fontSize:13, color:'var(--muted)'}}, 'Everything’s well stocked.')
+          : low.map(it=>e('div',{key:it.id, className:'order-line'},
+              e('span', null, it.name),
+              e('span',{style:{fontWeight:600, color:'var(--danger)'}}, itemStock(it)<=0?'Out of stock':(itemStock(it)+' left'))))
+      )
+    ),
+    e('div',{style:{borderTop:'1px solid var(--line)', margin:'22px 0 16px'}}),
+    e('button',{className:'btn-ghost', onClick:onExportCSV}, '⬇ Export orders (CSV)')
+  );
+}
+
+function AdminDash({items, orders, unreadCount, settings, customers, onClose, onAdd, onEdit, onDelete, onToggleAvailable, onMarkRead, onChangePin, onPinChanged, onSetDelivery, onDeliverySent, onSetStatus, onUpdateSettings, onSettingsSaved, onDeleteCustomer, onExport, onImport, onExportCSV, onLogout}) {
+  const importRef = useRef();
+  const [tab,setTab]=useState(unreadCount>0?'orders':'overview');
+  const [cur,setCur]=useState(""), [np,setNp]=useState(""), [np2,setNp2]=useState("");
+  const [pErr,setPErr]=useState(""), [pOk,setPOk]=useState(false);
+  const [confirmDel,setConfirmDel]=useState(null); // email pending delete confirmation
+  const [confirmDelItem,setConfirmDelItem]=useState(null); // item id pending delete confirmation
+  useEffect(()=>{ if(tab==='orders'&&unreadCount>0) onMarkRead(); },[tab]);
+  const submitPin = async () => {
+    setPErr(""); setPOk(false);
+    if(np!==np2){ setPErr("New passwords don’t match."); return; }
+    const err = await onChangePin(cur, np);
+    if(err){ setPErr(err); return; }
+    setCur(""); setNp(""); setNp2(""); setPOk(true); onPinChanged();
+  };
+  return e('div',{className:'overlay', onClick:onClose},
+    e('div',{className:'modal wide', onClick:ev=>ev.stopPropagation()},
+      e('button',{className:'close-x', onClick:onClose}, '×'),
+      e('h3', null, 'Shop dashboard'),
+      e('p',{className:'sub'}, 'Add products, read orders, see customers, brand your store, and manage your account.'),
+      e('div',{className:'admin-tabs'},
+        e('button',{className:tab==='overview'?'active':'', onClick:()=>setTab('overview')}, 'Overview'),
+        e('button',{className:tab==='items'?'active':'', onClick:()=>setTab('items')}, 'Products ('+items.length+')'),
+        e('button',{className:tab==='orders'?'active':'', onClick:()=>setTab('orders')},
+          'Inbox ('+orders.length+')', unreadCount>0 && e('span',{className:'new-badge'}, unreadCount+' new')),
+        e('button',{className:tab==='customers'?'active':'', onClick:()=>setTab('customers')}, 'Customers ('+customers.length+')'),
+        e('button',{className:tab==='store'?'active':'', onClick:()=>setTab('store')}, 'Store'),
+        e('button',{className:tab==='account'?'active':'', onClick:()=>setTab('account')}, 'Account')
+      ),
+      tab==='overview'
+        ? e(Overview, {items, orders, onExportCSV})
+        : tab==='items'
+        ? e('div', null,
+            e('button',{className:'btn-primary', style:{marginBottom:16}, onClick:onAdd}, '+ Add new item'),
+            items.map(it=>{
+              const stk = itemStock(it);
+              const hidden = it.available===false;
+              return e('div',{key:it.id, className:'admin-item', style:hidden?{opacity:.6}:null},
+                e('div',{className:'ai-thumb'}, it.img?e('img',{src:it.img}):catEmoji(it.cat)),
+                e('div',{className:'ai-info'},
+                  e('div',{className:'ai-name'}, it.name,
+                    hasDiscount(it) && e('span',{className:'disc-badge-sm'}, '-'+Number(it.discount)+'%'),
+                    hidden && e('span',{style:{marginLeft:8, fontSize:11, fontWeight:700, color:'var(--muted)'}}, '• Hidden')),
+                  e('div',{className:'ai-meta'}, it.cat+' · ',
+                    hasDiscount(it)
+                      ? e('span', null, rupees(finalPrice(it)), ' ', e('span',{className:'price-old'}, rupees(it.price)))
+                      : rupees(it.price),
+                    stk!=null && e('span',{style:{marginLeft:8, color: stk<=5?'var(--danger)':'var(--muted)'}},
+                      '· '+(stk<=0?'Out of stock':(stk+' in stock'))))
+                ),
+                e('button',{className:'link-btn', onClick:()=>onEdit(it)}, 'Edit'),
+                e('button',{className:'link-btn', style:{marginLeft:12}, onClick:()=>onToggleAvailable(it.id)}, hidden?'Show':'Hide'),
+                confirmDelItem===it.id
+                  ? e('span',{style:{display:'inline-flex', gap:8, alignItems:'center', marginLeft:12}},
+                      e('span',{style:{fontSize:13, color:'var(--muted)'}}, 'Delete?'),
+                      e('button',{className:'remove', onClick:()=>{ onDelete(it.id); setConfirmDelItem(null); }}, 'Yes'),
+                      e('button',{className:'link-btn', onClick:()=>setConfirmDelItem(null)}, 'No'))
+                  : e('button',{className:'remove', style:{marginLeft:12}, onClick:()=>setConfirmDelItem(it.id)}, 'Delete')
+              );
+            })
+          )
+        : tab==='orders'
+        ? e('div', null,
+            orders.length===0
+              ? e('div',{style:{padding:'30px 0', color:'var(--muted)', textAlign:'center'}}, 'No orders yet. They’ll show up here the moment a customer confirms.')
+              : orders.map(o=>e(OrderCard, {key:o.id, o, onSetDelivery, onDeliverySent, onSetStatus}))
+          )
+        : tab==='customers'
+        ? e('div', null,
+            customers.length===0
+              ? e('div',{style:{padding:'30px 0', color:'var(--muted)', textAlign:'center'}}, 'No customers yet. They appear here once someone places an order.')
+              : customers.map(c=>e('div',{key:c.email, className:'admin-item'},
+                  e('div',{className:'cust-avatar'}, (c.name||c.email||'?').trim().charAt(0).toUpperCase()),
+                  e('div',{className:'ai-info'},
+                    e('div',{className:'ai-name'}, c.name || c.email),
+                    e('div',{className:'ai-meta'},
+                      [c.name?c.email:null, c.phone?fmtPhone(c.phone):null, c.orders+' order'+(c.orders===1?'':'s'), rupees(c.total)].filter(Boolean).join(' · '))
+                  ),
+                  confirmDel===c.email
+                    ? e('span',{style:{display:'inline-flex', gap:8, alignItems:'center'}},
+                        e('span',{style:{fontSize:13, color:'var(--muted)'}}, 'Delete?'),
+                        e('button',{className:'remove', onClick:()=>{ onDeleteCustomer(c.email); setConfirmDel(null); }}, 'Yes'),
+                        e('button',{className:'link-btn', onClick:()=>setConfirmDel(null)}, 'No')
+                      )
+                    : e('button',{className:'remove', onClick:()=>setConfirmDel(c.email)}, 'Delete')
+                ))
+          )
+        : tab==='store'
+        ? e(StoreSettings, {settings, items, onUpdateSettings, onSaved:onSettingsSaved})
+        : e('div', null,
+            e('div',{style:{fontWeight:700, marginBottom:4}}, 'Change admin password'),
+            e('p',{style:{fontSize:13, color:'var(--muted)', marginBottom:18, lineHeight:1.5}},
+              'Set a new password for signing in to this dashboard. It applies to everyone who uses admin access.'),
+            e('div',{className:'field'}, e('label',null,'Current password'),
+              e('input',{type:'password', value:cur, onChange:ev=>setCur(ev.target.value), placeholder:'••••••'})),
+            e('div',{className:'field'}, e('label',null,'New password'),
+              e('input',{type:'password', value:np, onChange:ev=>setNp(ev.target.value), placeholder:'At least 4 characters'})),
+            e('div',{className:'field'}, e('label',null,'Confirm new password'),
+              e('input',{type:'password', value:np2, onChange:ev=>setNp2(ev.target.value),
+                onKeyDown:ev=>ev.key==='Enter'&&submitPin(), placeholder:'Re-enter new password'})),
+            pErr && e('div',{className:'err'}, pErr),
+            pOk && e('div',{style:{color:'var(--brass-deep)', fontSize:13, marginBottom:12, fontWeight:600}}, '✓ Password updated.'),
+            e('button',{className:'btn-primary', onClick:submitPin}, 'Update password'),
+            e('div',{style:{borderTop:'1px solid var(--line)', margin:'24px 0'}}),
+            e('div',{style:{fontWeight:700, marginBottom:4}}, 'Backup & restore'),
+            e('p',{style:{fontSize:13, color:'var(--muted)', marginBottom:14, lineHeight:1.5}},
+              'Download a backup file with all products, orders, settings, and your password. On Chrome and Edge you can choose where to save it (e.g. your Desktop); other browsers save it to Downloads. Restore it later, or on another device, to bring everything back exactly as it was.'),
+            e('div',{style:{display:'flex', gap:10, flexWrap:'wrap'}},
+              e('button',{className:'btn-primary', onClick:onExport}, '⬇ Download backup'),
+              e('button',{className:'btn-ghost', onClick:()=>importRef.current && importRef.current.click()}, '⬆ Restore from file'),
+              e('input',{ref:importRef, type:'file', accept:'application/json,.json', style:{display:'none'},
+                onChange:ev=>{ const f=ev.target.files[0]; if(f) onImport(f); ev.target.value=""; }})
+            ),
+            e('p',{style:{fontSize:12.5, color:'var(--muted)', marginTop:12, lineHeight:1.5}},
+              'Restoring replaces all current data with the file’s contents.')
+          ),
+      e('div',{style:{marginTop:20, textAlign:'right'}},
+        e('button',{className:'btn-ghost', onClick:onLogout}, 'Sign out of admin'))
+    )
+  );
+}
+
+function ImageEditor({src, aspect, round, onCancel, onApply}) {
+  // aspect = width/height of the crop frame; round = circular mask (for logo)
+  const FRAME_W = 320;
+  const FRAME_H = Math.round(FRAME_W / aspect);
+  const OUT_W = aspect >= 1 ? 900 : Math.round(900*aspect);
+  const OUT_H = Math.round(OUT_W / aspect);
+  const [zoom,setZoom]=useState(1);
+  const [pos,setPos]=useState({x:0,y:0});
+  const [img,setImgEl]=useState(null);
+  const [base,setBase]=useState(1); // scale that makes the image "cover" the frame at zoom 1
+  const drag=useRef(null);
+
+  useEffect(()=>{
+    const im=new Image();
+    im.onload=()=>{
+      const b=Math.max(FRAME_W/im.width, FRAME_H/im.height);
+      setBase(b); setImgEl(im); setZoom(1); setPos({x:0,y:0});
+    };
+    im.src=src;
+  },[src]);
+
+  const scale = base*zoom;
+  const clamp=(p)=>{
+    if(!img) return p;
+    const w=img.width*scale, h=img.height*scale;
+    const maxX=Math.max(0,(w-FRAME_W)/2), maxY=Math.max(0,(h-FRAME_H)/2);
+    return { x:Math.max(-maxX,Math.min(maxX,p.x)), y:Math.max(-maxY,Math.min(maxY,p.y)) };
+  };
+  const onDown=(ev)=>{ const t=ev.touches?ev.touches[0]:ev; drag.current={sx:t.clientX, sy:t.clientY, ox:pos.x, oy:pos.y}; };
+  const onMove=(ev)=>{
+    if(!drag.current) return;
+    const t=ev.touches?ev.touches[0]:ev;
+    setPos(clamp({x:drag.current.ox+(t.clientX-drag.current.sx), y:drag.current.oy+(t.clientY-drag.current.sy)}));
+  };
+  const onUp=()=>{ drag.current=null; };
+
+  const apply=()=>{
+    if(!img) return;
+    const canvas=document.createElement('canvas');
+    canvas.width=OUT_W; canvas.height=OUT_H;
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,OUT_W,OUT_H);
+    const ratio=OUT_W/FRAME_W; // map frame coords to output coords
+    const w=img.width*scale*ratio, h=img.height*scale*ratio;
+    const cx=OUT_W/2 + pos.x*ratio, cy=OUT_H/2 + pos.y*ratio;
+    ctx.drawImage(img, cx-w/2, cy-h/2, w, h);
+    onApply(canvas.toDataURL('image/jpeg', 0.85));
+  };
+
+  const imgStyle = img ? {
+    position:'absolute', left:'50%', top:'50%',
+    width:img.width*scale+'px', height:img.height*scale+'px',
+    transform:'translate(-50%,-50%) translate('+pos.x+'px,'+pos.y+'px)',
+    userSelect:'none', pointerEvents:'none', maxWidth:'none'
+  } : {};
+
+  return e('div',{className:'overlay', style:{zIndex:120}, onClick:onCancel},
+    e('div',{className:'modal', style:{maxWidth:400}, onClick:ev=>ev.stopPropagation()},
+      e('button',{className:'close-x', onClick:onCancel}, '×'),
+      e('h3', null, 'Adjust photo'),
+      e('p',{className:'sub'}, 'Drag to reposition and use the slider to zoom. The shaded area is what will show.'),
+      e('div',{className:'editor-frame', style:{width:FRAME_W, height:FRAME_H, margin:'0 auto'},
+        onMouseDown:onDown, onMouseMove:onMove, onMouseUp:onUp, onMouseLeave:onUp,
+        onTouchStart:onDown, onTouchMove:onMove, onTouchEnd:onUp},
+        img && e('img',{src:src, style:imgStyle, alt:''}),
+        e('div',{className:'editor-mask'+(round?' round':'')})
+      ),
+      e('div',{style:{display:'flex', alignItems:'center', gap:10, margin:'16px 0 4px'}},
+        e('span',{style:{fontSize:18}}, '🔍'),
+        e('input',{type:'range', min:1, max:3, step:0.01, value:zoom,
+          onChange:ev=>{ const z=parseFloat(ev.target.value); setZoom(z); setTimeout(()=>setPos(p=>clamp(p)),0); },
+          style:{flex:1}})
+      ),
+      e('div',{className:'modal-actions'},
+        e('button',{className:'btn-ghost', onClick:onCancel}, 'Cancel'),
+        e('button',{className:'btn-primary', onClick:apply}, 'Use photo'))
+    )
+  );
+}
+
+function ItemForm({existing, categories, onClose, onSave}) {
+  const cats = (categories && categories.length) ? categories : DEFAULT_CATEGORIES;
+  const [name,setName]=useState(existing?.name||"");
+  const [cat,setCat]=useState(existing?.cat||cats[0]);
+  const [price,setPrice]=useState(existing?.price||"");
+  const [discount,setDiscount]=useState(existing?.discount||"");
+  const [desc,setDesc]=useState(existing?.desc||"");
+  const [img,setImg]=useState(existing?.img||null);
+  const [stock,setStock]=useState(existing && existing.stock!=null ? String(existing.stock) : "");
+  const [available,setAvailable]=useState(existing ? existing.available!==false : true);
+  const [rawImg,setRawImg]=useState(null); // image awaiting adjustment
+  const [err,setErr]=useState("");
+  const fileRef=useRef();
+
+  const pick=(ev)=>{
+    const f=ev.target.files[0]; if(!f) return;
+    if(f.size>4*1024*1024){setErr("Image is too large — please use one under 4MB.");return;}
+    setErr("");
+    const r=new FileReader(); r.onload=()=>setRawImg(r.result); r.readAsDataURL(f);
+    ev.target.value=""; // allow re-picking same file
+  };
+  const submit=()=>{
+    if(!name.trim()){setErr("Give the item a name.");return;}
+    const p=parseFloat(price);
+    if(isNaN(p)||p<0){setErr("Enter a valid price.");return;}
+    let d = discount===""||discount===null ? 0 : parseFloat(discount);
+    if(isNaN(d)||d<0||d>=100){setErr("Discount must be between 0 and 99%.");return;}
+    let st = (stock===""||stock===null) ? null : Math.floor(parseFloat(stock));
+    if(st!=null && (isNaN(st)||st<0)){setErr("Stock must be 0 or more (leave blank for unlimited).");return;}
+    onSave({id:existing?.id, name:name.trim(), cat, price:p, discount:d,
+      desc:desc.trim()||"No description yet.", img, stock:st, available});
+  };
+  // live discounted-price preview
+  const pNum = parseFloat(price), dNum = parseFloat(discount);
+  const showPreview = !isNaN(pNum) && pNum>0 && !isNaN(dNum) && dNum>0 && dNum<100;
+  const previewPrice = showPreview ? Math.round(pNum*(1-dNum/100)) : null;
+
+  return e('div',{className:'overlay', onClick:onClose},
+    e('div',{className:'modal', onClick:ev=>ev.stopPropagation()},
+      e('button',{className:'close-x', onClick:onClose}, '×'),
+      e('h3', null, existing?'Edit item':'Add new item'),
+      e('p',{className:'sub'}, 'Fill in the details, set an optional discount, and upload a photo.'),
+      e('div',{className:'field'}, e('label',null,'Name'),
+        e('input',{value:name, onChange:ev=>setName(ev.target.value), placeholder:'e.g. Cast Iron Skillet'})),
+      e('div',{className:'field'}, e('label',null,'Category'),
+        e('select',{value:cat, onChange:ev=>setCat(ev.target.value)},
+          cats.map(c=>e('option',{key:c, value:c}, c)))),
+      e('div',{style:{display:'flex', gap:10}},
+        e('div',{className:'field', style:{flex:1}}, e('label',null,'Price (₹ INR)'),
+          e('input',{type:'number', value:price, onChange:ev=>setPrice(ev.target.value), placeholder:'e.g. 4999'})),
+        e('div',{className:'field', style:{flex:1}}, e('label',null,'Discount (%)'),
+          e('input',{type:'number', min:0, max:99, value:discount, onChange:ev=>setDiscount(ev.target.value), placeholder:'0'}))
+      ),
+      showPreview && e('div',{style:{marginTop:-6, marginBottom:14, fontSize:14}},
+        'Sells for ', e('strong',{style:{color:'var(--text)'}}, rupees(previewPrice)),
+        ' ', e('span',{className:'price-old'}, rupees(Math.round(pNum)))),
+      e('div',{className:'field'}, e('label',null,'Stock quantity'),
+        e('input',{type:'number', min:0, value:stock, onChange:ev=>setStock(ev.target.value), placeholder:'Leave blank for unlimited'}),
+        e('div',{style:{fontSize:12, color:'var(--muted)', marginTop:6, lineHeight:1.4}},
+          'Tracks inventory and shows “Out of stock” at 0. Blank = not tracked.')),
+      e('label',{style:{display:'flex', alignItems:'center', gap:8, fontSize:14, marginBottom:16, cursor:'pointer'}},
+        e('input',{type:'checkbox', checked:available, onChange:ev=>setAvailable(ev.target.checked)}),
+        'Available for sale (uncheck to hide it from the store)'),
+      e('div',{className:'field'}, e('label',null,'Description'),
+        e('textarea',{value:desc, onChange:ev=>setDesc(ev.target.value), placeholder:'A short description for shoppers.'})),
+      e('div',{className:'field'}, e('label',null,'Photo'),
+        e('div', null,
+          e('div',{style:{display:'flex', gap:8, alignItems:'center', flexWrap:'wrap'}},
+            e('label',{className:'file-label'}, img?'Change photo':'Upload photo',
+              e('input',{ref:fileRef, type:'file', accept:'image/*', style:{display:'none'}, onChange:pick})),
+            img && e('button',{className:'link-btn', onClick:()=>setRawImg(img)}, 'Adjust photo'),
+            img && e('button',{className:'remove', onClick:()=>setImg(null)}, 'Remove')
+          ),
+          img && e('img',{className:'img-preview', src:img}))),
+      err && e('div',{className:'err'}, err),
+      e('div',{className:'modal-actions'},
+        e('button',{className:'btn-ghost', onClick:onClose}, 'Cancel'),
+        e('button',{className:'btn-primary', onClick:submit}, existing?'Save changes':'Add item')),
+      rawImg && e(ImageEditor, {src:rawImg, aspect:4/3, round:false,
+        onCancel:()=>setRawImg(null),
+        onApply:(data)=>{ setImg(data); setRawImg(null); }})
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(e(App));
+</script>

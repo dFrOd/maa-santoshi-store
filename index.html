@@ -1103,6 +1103,19 @@ function App() {
     if (typeof document !== "undefined") document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
+  // when the admin is signed in, stream every order from Firestore into the Inbox live (real-time "new" badge);
+  // customers keep their own local copy for "My orders"
+  useEffect(() => {
+    if (!FB.enabled) return;
+    if (isAdmin) {
+      const off = FB.db.collection("orders").onSnapshot(
+        snap => setOrders(snap.docs.map(d => d.data()).sort((a,b) => (b.ts||0) - (a.ts||0))),
+        err => console.error(err));
+      return () => off();
+    }
+    (async () => setOrders(await loadOrders()))();
+  }, [isAdmin]);
+
   const showToast = (m) => { setToast(m); setTimeout(()=>setToast(""), 2600); };
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
@@ -1165,7 +1178,7 @@ function App() {
     const t = computeTotals(cartTotal, settings, pct);
     if (t.minOrder > 0 && t.afterDiscount < t.minOrder) { showToast("Minimum order is " + rupees(t.minOrder)); return; }
     const order = {
-      id: "o"+Date.now(),
+      id: "o"+Date.now(), ts: Date.now(),
       customer: user.name || user.email, name: user.name || "", email: user.email, phone: user.phone || "", address: user.address.trim(),
       lines: cartItems.map(x=>({id:x.item.id, name:x.item.name, qty:x.qty, price:finalPrice(x.item, settings)})),
       subtotal: t.subtotal,
@@ -1176,6 +1189,14 @@ function App() {
       status: "new", statusAt: new Date().toLocaleString(),
       when: new Date().toLocaleString(), read: false,
     };
+    // open WhatsApp synchronously (before any await) so mobile browsers don't block the popup
+    if (via === "whatsapp") {
+      const link = waLink(settings.shop && settings.shop.whatsapp, orderToText(order, settings));
+      if (link && typeof window !== "undefined") window.open(link, "_blank");
+    }
+    // send the order to the shop's Inbox (Firestore) so it arrives on any device, live
+    if (FB.enabled) { try { await FB.db.collection("orders").doc(order.id).set(order); } catch(e){ console.error("order send failed", e); } }
+    // keep a copy on this device for the customer's own "My orders"
     const next = [order, ...orders];
     setOrders(next); await saveOrders(next);
     // decrement tracked stock for the items just ordered (local mode only — customers can't write the shared catalog)
@@ -1185,13 +1206,7 @@ function App() {
       setItems(nextItems); await saveItems(nextItems);
     }
     setCart([]); setAppliedCode(null); setModal(null);
-    if (via === "whatsapp") {
-      const link = waLink(settings.shop && settings.shop.whatsapp, orderToText(order, settings));
-      if (link && typeof window !== "undefined") window.open(link, "_blank");
-      showToast(link ? "Order saved — opening WhatsApp…" : "Order sent — the shop has been notified");
-    } else {
-      showToast("Order sent — the shop has been notified");
-    }
+    showToast(via === "whatsapp" ? "Order placed — opening WhatsApp…" : "Order placed — sent to the shop");
   };
 
   const saveAddress = (addr) => setUser(u => { const n = {...u, address: addr}; saveCustomer(n); return n; });
@@ -1207,8 +1222,12 @@ function App() {
     const o = orders.find(x=>x.id===orderId);
     if (!o) return;
     const wasCancelled = orderStatus(o) === "cancelled";
-    const next = orders.map(x => x.id===orderId ? {...x, status, statusAt: new Date().toLocaleString()} : x);
-    setOrders(next); await saveOrders(next);
+    if (FB.enabled) {
+      try { await FB.db.collection("orders").doc(orderId).update({status, statusAt: new Date().toLocaleString()}); } catch(e){ console.error(e); }
+    } else {
+      const next = orders.map(x => x.id===orderId ? {...x, status, statusAt: new Date().toLocaleString()} : x);
+      setOrders(next); await saveOrders(next);
+    }
     if (status === "cancelled" && !wasCancelled) await restoreStock(o.lines);
     showToast("Order marked " + statusLabel(status));
   };
@@ -1256,13 +1275,18 @@ function App() {
     showToast(next.find(i=>i.id===id).available===false ? "Item hidden from store" : "Item shown in store");
   };
   const markRead = async () => {
+    if (FB.enabled) {
+      const unread = orders.filter(o=>!o.read);
+      if (unread.length) { const b = FB.db.batch(); unread.forEach(o => b.update(FB.db.collection("orders").doc(o.id), {read:true})); try { await b.commit(); } catch(e){ console.error(e); } }
+      return; // the live listener refreshes state
+    }
     const next = orders.map(o=>({...o, read:true}));
     setOrders(next); await saveOrders(next);
   };
   const setDelivery = async (orderId, eta) => {
-    const next = orders.map(o => o.id===orderId
-      ? {...o, delivery: {...eta, sentAt: new Date().toLocaleString()}}
-      : o);
+    const delivery = {...eta, sentAt: new Date().toLocaleString()};
+    if (FB.enabled) { try { await FB.db.collection("orders").doc(orderId).update({delivery}); } catch(e){ console.error(e); } return; }
+    const next = orders.map(o => o.id===orderId ? {...o, delivery} : o);
     setOrders(next); await saveOrders(next);
   };
   const changePin = async (current, next) => {
@@ -1276,6 +1300,11 @@ function App() {
     setSettings(next); await saveSettings(next);
   };
   const deleteCustomer = async (email) => {
+    if (FB.enabled) {
+      const mine = orders.filter(o => o.email === email);
+      if (mine.length) { const b = FB.db.batch(); mine.forEach(o => b.delete(FB.db.collection("orders").doc(o.id))); try { await b.commit(); } catch(e){ console.error(e); } }
+      showToast("Customer removed"); return;
+    }
     const next = orders.filter(o => o.email !== email);
     setOrders(next); await saveOrders(next);
     showToast("Customer removed");
@@ -1719,8 +1748,11 @@ function CartModal({cartItems, cartTotal, totals, appliedCode, setQty, removeCar
       ),
       belowMin && e('div',{className:'err', style:{textAlign:'center'}},
         'Minimum order is '+rupees(ch.minOrder)+'. Add '+rupees(ch.minOrder-totals.afterDiscount)+' more to continue.'),
-      e('button',{className:'btn-primary', style:{width:'100%'}, disabled:belowMin, onClick:()=>onPlace('app')}, 'Confirm & notify shop'),
-      waNumber && e('button',{className:'wa-btn', style:{width:'100%', marginTop:10, opacity:belowMin?.5:1, cursor:belowMin?'not-allowed':'pointer'}, disabled:belowMin, onClick:()=>onPlace('whatsapp')}, '💬 Send order on WhatsApp')
+      waNumber
+        ? e('button',{className:'wa-btn', style:{width:'100%', opacity:belowMin?.5:1, cursor:belowMin?'not-allowed':'pointer'}, disabled:belowMin, onClick:()=>onPlace('whatsapp')}, '💬 Place order on WhatsApp')
+        : e('button',{className:'btn-primary', style:{width:'100%'}, disabled:belowMin, onClick:()=>onPlace('app')}, 'Confirm order'),
+      waNumber && e('p',{style:{fontSize:12, color:'var(--muted)', textAlign:'center', marginTop:8}},
+        'Sends your order to the shop and opens WhatsApp to confirm.')
     );
   };
 

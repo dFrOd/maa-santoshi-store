@@ -1156,6 +1156,19 @@ function App() {
     (async () => setOrders(await loadOrders()))();
   }, [isAdmin, authUid]);
 
+  // one-time migration: create a live stock/{id} doc for any item that has a stock number
+  // in the catalog but no stock doc yet (only the admin may create these). Idempotent —
+  // it only fills in missing docs, never overwrites a live (already-decremented) count.
+  useEffect(() => {
+    if (!FB.enabled || !isAdmin || !Array.isArray(items)) return;
+    items.forEach(it => {
+      if (it && Number.isFinite(it.stock) && stockMapRef.current[it.id] == null) {
+        FB.db.collection("stock").doc(it.id).set({ count: Math.max(0, Math.floor(it.stock)) })
+          .catch(e => console.error("stock seed failed", e));
+      }
+    });
+  }, [isAdmin, items]);
+
   const showToast = (m) => { setToast(m); setTimeout(()=>setToast(""), 2600); };
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";

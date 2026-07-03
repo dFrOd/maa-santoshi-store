@@ -1294,9 +1294,17 @@ function App() {
   };
   // admin: delete a single order (removes it live for the admin Inbox and the customer's My Orders)
   const deleteOrder = async (orderId) => {
-    if (FB.enabled) { try { await FB.db.collection("orders").doc(orderId).delete(); } catch(e){ console.error(e); } showToast("Order deleted"); return; }
-    const next = orders.filter(o => o.id !== orderId);
+    const o = orders.find(x => x.id === orderId);
+    // put stock back on delete — but not if it was already cancelled (already restored) or delivered (goods went out)
+    const restore = o && orderStatus(o) !== "cancelled" && orderStatus(o) !== "delivered";
+    if (FB.enabled) {
+      try { await FB.db.collection("orders").doc(orderId).delete(); } catch(e){ console.error(e); showToast("Couldn’t delete order"); return; }
+      if (restore) await restoreStock(o.lines);
+      showToast("Order deleted"); return;
+    }
+    const next = orders.filter(x => x.id !== orderId);
     setOrders(next); await saveOrders(next);
+    if (restore) await restoreStock(o.lines);
     showToast("Order deleted");
   };
 

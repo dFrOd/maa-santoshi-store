@@ -1034,6 +1034,8 @@ function App() {
   const [orders, setOrders] = useState([]);
   const [registeredCustomers, setRegisteredCustomers] = useState([]); // customers who have signed in (Firestore; admin view)
   const [authUid, setAuthUid] = useState(null); // Firebase auth uid (anonymous for customers) — used for own-order live reads
+  const catalogItemsRef = useRef(null); // latest catalog (FB) for merging live stock counts
+  const stockMapRef = useRef({});        // latest live stock counts by item id
   const [filter, setFilter] = useState("All");
   const [cart, setCart] = useState([]); // {id, qty}
   const [modal, setModal] = useState(null); // 'cart','login','admin','adminLogin','addItem'
@@ -1072,10 +1074,19 @@ function App() {
       }
     })();
     if (FB.enabled) {
+      // merge live per-item stock counts into the catalog for display
+      const applyStock = () => {
+        const cat = catalogItemsRef.current;
+        if (cat) setItems(cat.map(it => stockMapRef.current[it.id] != null ? { ...it, stock: stockMapRef.current[it.id] } : it));
+      };
       // live catalog for every visitor (falls back to the built-in list until the shop is first seeded)
       const offItems = FB.db.collection("shop").doc("catalog").onSnapshot(
-        d => setItems(d.exists ? (d.data().items || []) : SEED),
-        err => { console.error(err); setItems(SEED); });
+        d => { catalogItemsRef.current = d.exists ? (d.data().items || []) : SEED; applyStock(); },
+        err => { console.error(err); catalogItemsRef.current = SEED; applyStock(); });
+      // live per-item stock counts (decrease the instant an order is placed)
+      const offStock = FB.db.collection("stock").onSnapshot(
+        snap => { const m = {}; snap.docs.forEach(x => { const c = x.data().count; if (c != null) m[x.id] = c; }); stockMapRef.current = m; applyStock(); },
+        err => console.error(err));
       // live settings (discounts, promo, codes, shop info, charges)
       const offSettings = FB.db.collection("shop").doc("settings").onSnapshot(
         d => setSettings(d.exists
@@ -1100,7 +1111,7 @@ function App() {
           } catch (err) { console.error(err); }
         }
       });
-      return () => { offItems(); offSettings(); offAuth(); };
+      return () => { offItems(); offSettings(); offStock(); offAuth(); };
     }
   }, []);
 
@@ -1229,8 +1240,21 @@ function App() {
     // keep a copy on this device for the customer's own "My orders"
     const next = [order, ...orders];
     setOrders(next); await saveOrders(next);
-    // decrement tracked stock for the items just ordered (local mode only — customers can't write the shared catalog)
-    if (!FB.enabled) {
+    // decrement tracked stock for the items just ordered
+    if (FB.enabled) {
+      // per-item stock docs: a transaction decrements the count (rules allow signed-in users to only decrease) — instant + live for everyone
+      await Promise.all(cartItems.map(async (x) => {
+        const ref = FB.db.collection("stock").doc(x.item.id);
+        try {
+          await FB.db.runTransaction(async (t) => {
+            const d = await t.get(ref);
+            if (!d.exists) return; // untracked item
+            const cur = Number(d.data().count) || 0;
+            t.update(ref, { count: Math.max(0, cur - x.qty) });
+          });
+        } catch(e){ console.error("stock decrement failed", e); }
+      }));
+    } else {
       let nextItems = items;
       cartItems.forEach(x => { nextItems = nextItems.map(it => (it.id===x.item.id && itemStock(it)!=null) ? {...it, stock: Math.max(0, it.stock - x.qty)} : it); });
       setItems(nextItems); await saveItems(nextItems);
@@ -1263,12 +1287,27 @@ function App() {
     showToast("Order deleted");
   };
 
-  // restore stock when an order is cancelled (matches lines by item id)
+  // restore stock when an order is cancelled (matches lines by item id) — admin only (rules block customer increases)
   const restoreStock = async (lines) => {
     if (!Array.isArray(lines)) return;
+    if (FB.enabled) {
+      await Promise.all(lines.map(async (l) => {
+        if (!l.id) return;
+        const ref = FB.db.collection("stock").doc(l.id);
+        try { await FB.db.runTransaction(async (t) => { const d = await t.get(ref); if (d.exists) t.update(ref, { count: (Number(d.data().count)||0) + (l.qty||0) }); }); }
+        catch(e){ console.error("stock restore failed", e); }
+      }));
+      return;
+    }
     let next = items;
     lines.forEach(l => { next = next.map(it => (l.id && it.id===l.id && itemStock(it)!=null) ? {...it, stock: it.stock + (l.qty||0)} : it); });
     setItems(next); await saveItems(next);
+  };
+  // customer: cancel/delete their OWN order (rules allow deleting an order whose uid matches theirs)
+  const customerDeleteOrder = async (orderId) => {
+    if (FB.enabled) { try { await FB.db.collection("orders").doc(orderId).delete(); } catch(e){ console.error(e); showToast("Couldn’t cancel — please try again"); return; } }
+    else { const next = orders.filter(o => o.id !== orderId); setOrders(next); await saveOrders(next); }
+    showToast("Order cancelled");
   };
   const setOrderStatus = async (orderId, status) => {
     const o = orders.find(x=>x.id===orderId);
@@ -1306,13 +1345,18 @@ function App() {
 
   // admin: add / edit / delete
   const upsertItem = async (data) => {
-    let next;
-    if (data.id && items.find(i=>i.id===data.id)) {
-      next = items.map(i=>i.id===data.id?data:i);
-    } else {
-      next = [{...data, id:"i"+Date.now()}, ...items];
-    }
+    const isEdit = data.id && items.find(i=>i.id===data.id);
+    const id = isEdit ? data.id : "i"+Date.now();
+    const item = {...data, id};
+    const next = isEdit ? items.map(i=>i.id===id?item:i) : [item, ...items];
     setItems(next); await saveItems(next);
+    // mirror the admin-set stock to the live per-item stock collection (blank = untracked → remove)
+    if (FB.enabled) {
+      try {
+        if (Number.isFinite(item.stock)) await FB.db.collection("stock").doc(id).set({ count: Math.max(0, Math.floor(item.stock)) });
+        else await FB.db.collection("stock").doc(id).delete();
+      } catch(e){ console.error("stock save failed", e); }
+    }
     setModal(null); setEditItem(null);
     showToast("Item saved");
   };
@@ -1611,7 +1655,7 @@ function App() {
       onSaveAddress:saveAddress, onToast:showToast}),
     modal==='login' && e(LoginModal, {onClose:()=>setModal(null), onLogin:customerLogin}),
     modal==='existingLogin' && e(ExistingLogin, {onClose:()=>setModal(null), onLogin:customerLogin, onNew:()=>setModal('login')}),
-    modal==='myorders' && e(MyOrders, {orders:myOrders, onReorder:reorder, onClose:()=>{
+    modal==='myorders' && e(MyOrders, {orders:myOrders, onReorder:reorder, onDeleteOrder:customerDeleteOrder, onClose:()=>{
       setSeenDeliveries(myOrders.filter(o=>o.delivery).map(o=>o.id+o.delivery.sentAt));
       setModal(null);
     }}),
@@ -1892,8 +1936,9 @@ function CartModal({cartItems, cartTotal, totals, appliedCode, setQty, removeCar
   );
 }
 
-function MyOrders({orders, onReorder, onClose}) {
+function MyOrders({orders, onReorder, onDeleteOrder, onClose}) {
   const etaText = (d) => d.num + " " + (d.num===1 ? d.unit.replace(/s$/,'') : d.unit);
+  const [confirmDelId, setConfirmDelId] = useState(null);
   return e('div',{className:'overlay', onClick:onClose},
     e('div',{className:'modal', onClick:ev=>ev.stopPropagation()},
       e('button',{className:'close-x', onClick:onClose}, '×'),
@@ -1932,7 +1977,15 @@ function MyOrders({orders, onReorder, onClose}) {
                 e('span', null, 'GST ('+o.gstPercent+'%)'), e('span', null, rupees(o.gstAmount))),
               e('div',{className:'order-line', style:{fontWeight:600, borderTop:'1px solid var(--line)', marginTop:6, paddingTop:8}},
                 e('span', null, 'Total'), e('span', null, rupees(o.total))),
-              onReorder && e('button',{className:'btn-ghost', style:{marginTop:12, width:'100%'}, onClick:()=>onReorder(o)}, '🔁 Order again')
+              e('div',{style:{display:'flex', gap:8, marginTop:12, flexWrap:'wrap'}},
+                onReorder && e('button',{className:'btn-ghost', style:{flex:1}, onClick:()=>onReorder(o)}, '🔁 Order again'),
+                onDeleteOrder && (confirmDelId===o.id
+                  ? e('span',{style:{display:'inline-flex', gap:8, alignItems:'center', flex:1, justifyContent:'center'}},
+                      e('span',{style:{fontSize:13, color:'var(--muted)'}}, 'Cancel this order?'),
+                      e('button',{className:'remove', onClick:()=>{ onDeleteOrder(o.id); setConfirmDelId(null); }}, 'Yes'),
+                      e('button',{className:'link-btn', onClick:()=>setConfirmDelId(null)}, 'No'))
+                  : e('button',{className:'remove', style:{flex:1}, onClick:()=>setConfirmDelId(o.id)}, 'Cancel order'))
+              )
             );
           })
     )

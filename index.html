@@ -796,8 +796,9 @@ const DEFAULT_CATEGORIES = ["Cookware", "Utensils", "Mixers", "Cookers", "Bakewa
 const EMOJI = { Cookware:"🍳", Utensils:"🥄", Mixers:"🌀", Cookers:"🍲", Bakeware:"🧁", Storage:"🫙" };
 const FALLBACK_EMOJI = "🍴";
 const DEFAULT_PIN = "admin123"; // initial admin password — change it from the dashboard
+const LOGO_URL = "https://dfrod.github.io/maa-santoshi-store/photos/SantoshiMaa.png"; // baked-in default store logo (admin can override in settings)
 const DEFAULT_SETTINGS = {
-  logo: null, categories: DEFAULT_CATEGORIES, promo: null, codes: [],
+  logo: LOGO_URL, categories: DEFAULT_CATEGORIES, promo: null, codes: [],
   shop: { phone:"9167972686", whatsapp:"9167972686", address:"Bhandup West, Mumbai", hours:"Open 8 AM – 6 PM", maps:"https://maps.app.goo.gl/p9mpYxC4tWteExAx5" },
   charges: { deliveryFee:50, freeAbove:500, minOrder:0, gstPercent:18 },
 };
@@ -823,6 +824,7 @@ async function loadSettings() {
     if (FB.enabled) { const d = await FB.db.collection("shop").doc("settings").get(); s = d.exists ? d.data() : {}; }
     else { const r = await window.storage.get("store:settings", true); s = r ? JSON.parse(r.value) : {}; }
     return { ...DEFAULT_SETTINGS, ...s,
+      logo: s.logo || DEFAULT_SETTINGS.logo,
       categories: (s.categories && s.categories.length) ? s.categories : DEFAULT_CATEGORIES };
   } catch { return DEFAULT_SETTINGS; }
 }
@@ -1046,13 +1048,14 @@ function LogoMark() {
   );
 }
 
+const IMG_BASE = "https://dfrod.github.io/maa-santoshi-store/photos/";
 const SEED = [
-  { id:"s1", name:"Copper Core Sauté Pan", cat:"Cookware", price:10999, desc:"Tri-ply stainless with a copper core for even, responsive heat.", img:"Copper%20Core%20Saute%20Pan.jpg" },
-  { id:"s2", name:"Acacia Spoon Set", cat:"Utensils", price:2899, desc:"Hand-finished wooden spoons that won't scratch your pans.", img:"Spoon%20Set.jpg" },
-  { id:"s3", name:"Stand Mixer 5.5Q", cat:"Mixers", price:24999, desc:"10-speed tilt-head mixer with a stainless bowl and dough hook.", img:"Stand%20Mixer.jpg" },
-  { id:"s4", name:"8-in-1 Pressure Cooker", cat:"Cookers", price:9999, desc:"Pressure cook, slow cook, steam, and sauté in one pot.", img:"8%20in%20one%20pressure%20cooker.jpg" },
-  { id:"s5", name:"Nonstick Bake Set", cat:"Bakeware", price:4199, desc:"Warp-resistant sheet pans and loaf tins for everyday baking.", img:"Bake%20Set.jpg" },
-  { id:"s6", name:"Glass Canister Trio", cat:"Storage", price:3299, desc:"Airtight borosilicate jars with bamboo lids for pantry staples.", img:"Trio.jpg" },
+  { id:"s1", name:"Copper Core Sauté Pan", cat:"Cookware", price:10999, desc:"Tri-ply stainless with a copper core for even, responsive heat.", img:IMG_BASE+"Copper%20Core%20Saute%20Pan.jpg" },
+  { id:"s2", name:"Acacia Spoon Set", cat:"Utensils", price:2899, desc:"Hand-finished wooden spoons that won't scratch your pans.", img:IMG_BASE+"Spoon%20Set.jpg" },
+  { id:"s3", name:"Stand Mixer 5.5Q", cat:"Mixers", price:24999, desc:"10-speed tilt-head mixer with a stainless bowl and dough hook.", img:IMG_BASE+"Stand%20Mixer.jpg" },
+  { id:"s4", name:"8-in-1 Pressure Cooker", cat:"Cookers", price:9999, desc:"Pressure cook, slow cook, steam, and sauté in one pot.", img:IMG_BASE+"8%20in%20one%20pressure%20cooker.jpg" },
+  { id:"s5", name:"Nonstick Bake Set", cat:"Bakeware", price:4199, desc:"Warp-resistant sheet pans and loaf tins for everyday baking.", img:IMG_BASE+"Bake%20Set.jpg" },
+  { id:"s6", name:"Glass Canister Trio", cat:"Storage", price:3299, desc:"Airtight borosilicate jars with bamboo lids for pantry staples.", img:IMG_BASE+"Trio.jpg" },
 ];
 
 function App() {
@@ -1080,6 +1083,8 @@ function App() {
   const [sort, setSort] = useState("featured");   // catalog sort order
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
+  const [logoBroken, setLogoBroken] = useState(false); // header logo URL failed to load → fall back to the crest mark
+  useEffect(() => { setLogoBroken(false); }, [settings.logo]); // give a newly-set logo a fresh chance to load
 
   useEffect(() => {
     (async () => {
@@ -1116,7 +1121,7 @@ function App() {
       // live settings (discounts, promo, codes, shop info, charges)
       const offSettings = FB.db.collection("shop").doc("settings").onSnapshot(
         d => setSettings(d.exists
-          ? { ...DEFAULT_SETTINGS, ...d.data(), categories: (d.data().categories && d.data().categories.length) ? d.data().categories : DEFAULT_CATEGORIES }
+          ? { ...DEFAULT_SETTINGS, ...d.data(), logo: d.data().logo || DEFAULT_SETTINGS.logo, categories: (d.data().categories && d.data().categories.length) ? d.data().categories : DEFAULT_CATEGORIES }
           : DEFAULT_SETTINGS),
         err => console.error(err));
       // give every visitor an identity: anonymous for customers (so they can read their OWN orders live),
@@ -1130,8 +1135,25 @@ function App() {
         if (admin && !seeded) {
           seeded = true;
           try {
-            const cat = await FB.db.collection("shop").doc("catalog").get();
-            if (!cat.exists || !(cat.data().items || []).length) await FB.db.collection("shop").doc("catalog").set({ items: SEED });
+            const catRef = FB.db.collection("shop").doc("catalog");
+            const cat = await catRef.get();
+            if (!cat.exists || !(cat.data().items || []).length) {
+              await catRef.set({ items: SEED });
+            } else {
+              // one-time repair: rewrite any legacy relative image path (e.g. "Trio.jpg") to a full
+              // repo URL under photos/ so photos resolve on GitHub Pages. Idempotent — absolute (http)
+              // and uploaded (data:) images are left untouched, so this no-ops on later sign-ins.
+              const raw = cat.data().items || [];
+              let changed = false;
+              const fixed = raw.map(it => {
+                if (it && typeof it.img === "string" && it.img && !/^https?:\/\//i.test(it.img) && !isDataUrl(it.img)) {
+                  changed = true;
+                  return { ...it, img: IMG_BASE + it.img.replace(/^\/+/, "").replace(/^photos\//i, "") };
+                }
+                return it;
+              });
+              if (changed) await catRef.set({ items: fixed });
+            }
             const st = await FB.db.collection("shop").doc("settings").get();
             if (!st.exists) await FB.db.collection("shop").doc("settings").set(DEFAULT_SETTINGS);
           } catch (err) { console.error(err); }
@@ -1612,8 +1634,8 @@ function App() {
       e('div', {className:'wrap'},
         e('div', {className:'bar'},
           e('div', {className:'logo', onClick:goHome},
-            e('span',{className:'crest'+(settings.logo?' has-img':'')},
-              settings.logo ? e('img',{src:settings.logo, alt:'Logo'}) : e(LogoMark)),
+            e('span',{className:'crest'+((settings.logo && !logoBroken)?' has-img':'')},
+              (settings.logo && !logoBroken) ? e('img',{src:settings.logo, alt:'Logo', onError:()=>setLogoBroken(true)}) : e(LogoMark)),
             e('span', null,
               e('span',{className:'mark'},'Maa Santoshi Steel Center'),
               e('span',{className:'tag'},'Kitchenwares')
@@ -2325,6 +2347,8 @@ function StoreSettings({settings, items, onUpdateSettings, onSaved}) {
   const [gstPercent,setGstPercent]=useState(ch0.gstPercent||"");
   const [chargeErr,setChargeErr]=useState("");
   const [rawLogo,setRawLogo]=useState(null);
+  const [logoErr,setLogoErr]=useState(false); // an external logo link failed to load
+  const [logoUrl,setLogoUrl]=useState(settings.logo && !isDataUrl(settings.logo) ? settings.logo : ""); // editing buffer for the link field
   const logoRef=useRef();
   const cats = settings.categories || DEFAULT_CATEGORIES;
   const codes = settings.codes || [];
@@ -2334,6 +2358,13 @@ function StoreSettings({settings, items, onUpdateSettings, onSaved}) {
     if(f.size>4*1024*1024){ onSaved("Logo image too large — use one under 4MB."); return; }
     const r=new FileReader(); r.onload=()=>setRawLogo(r.result); r.readAsDataURL(f);
     ev.target.value="";
+  };
+  // commit the pasted logo link — once, on blur/Enter (not per keystroke, to avoid a write each character)
+  const commitLogoUrl=()=>{
+    const v=logoUrl.trim();
+    const cur=(settings.logo && !isDataUrl(settings.logo)) ? settings.logo : "";
+    if(v===cur) return;
+    setLogoErr(false); onUpdateSettings({logo: v || null}); onSaved(v ? "Logo link saved" : "Logo reset");
   };
   const addCat=()=>{
     const c=newCat.trim();
@@ -2393,14 +2424,25 @@ function StoreSettings({settings, items, onUpdateSettings, onSaved}) {
     // logo
     e('div',{style:{fontWeight:700, marginBottom:6}}, 'Store logo'),
     e('p',{style:{fontSize:13, color:'var(--muted)', marginBottom:12, lineHeight:1.5}},
-      'Upload an image for the header icon — you can zoom and reposition it to fit the square.'),
+      'Set the header icon — paste an image link (e.g. a square photo in your GitHub repo) or upload one to zoom & reposition.'),
     e('div',{style:{display:'flex', alignItems:'center', gap:14, marginBottom:8, flexWrap:'wrap'}},
-      e('div',{className:'logo-preview'}, settings.logo ? e('img',{src:settings.logo}) : e(LogoMark)),
+      e('div',{className:'logo-preview'}, settings.logo
+        ? e('img',{src:settings.logo, onError:()=>setLogoErr(true), onLoad:()=>setLogoErr(false)})
+        : e(LogoMark)),
       e('label',{className:'file-label'}, settings.logo?'Change logo':'Upload logo',
         e('input',{ref:logoRef, type:'file', accept:'image/*', style:{display:'none'}, onChange:pickLogo})),
-      settings.logo && e('button',{className:'link-btn', onClick:()=>setRawLogo(settings.logo)}, 'Adjust'),
-      settings.logo && e('button',{className:'remove', onClick:()=>{ onUpdateSettings({logo:null}); onSaved("Logo reset"); }}, 'Reset')
+      settings.logo && isDataUrl(settings.logo) && e('button',{className:'link-btn', onClick:()=>setRawLogo(settings.logo)}, 'Adjust'),
+      settings.logo && e('button',{className:'remove', onClick:()=>{ setLogoUrl(""); setLogoErr(false); onUpdateSettings({logo:null}); onSaved("Logo reset"); }}, 'Reset')
     ),
+    e('div',{style:{marginBottom:8}},
+      e('input',{type:'url', value:logoUrl,
+        onChange:ev=>setLogoUrl(ev.target.value),
+        onBlur:commitLogoUrl,
+        onKeyDown:ev=>{ if(ev.key==='Enter') ev.target.blur(); },
+        placeholder:'…or paste a logo image link (https://…)'}),
+      e('div',{style:{fontSize:12, color:'var(--muted)', marginTop:6, lineHeight:1.4}},
+        'Recommended: paste a link (e.g. a square image in your GitHub repo) — keeps the store data small. Uploading embeds the image instead.')),
+    logoErr && e('div',{className:'err', style:{marginBottom:8}}, 'That logo link didn’t load — double-check the URL.'),
     e('div',{style:{borderTop:'1px solid var(--line)', margin:'22px 0'}}),
     // sections
     e('div',{style:{fontWeight:700, marginBottom:6}}, 'Sections (categories)'),
@@ -2508,7 +2550,7 @@ function StoreSettings({settings, items, onUpdateSettings, onSaved}) {
     e('button',{className:'btn-primary', onClick:saveCharges}, 'Save delivery & charges'),
     rawLogo && e(ImageEditor, {src:rawLogo, aspect:1, round:false,
       onCancel:()=>setRawLogo(null),
-      onApply:(data)=>{ onUpdateSettings({logo:data}); setRawLogo(null); onSaved("Logo updated"); }})
+      onApply:(data)=>{ onUpdateSettings({logo:data}); setRawLogo(null); setLogoUrl(""); onSaved("Logo updated"); }})
   );
 }
 

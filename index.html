@@ -600,6 +600,7 @@
   }
   .stock-badge.out { background: var(--danger); }
   .stock-low { font-size: 12px; color: var(--danger); font-weight: 600; }
+  .stock-ok { font-size: 12px; color: var(--muted); font-weight: 600; }
   .card.is-out .thumb { opacity: .65; }
   .add-btn:disabled { opacity: .55; cursor: not-allowed; }
   .add-btn:disabled:hover { background: var(--ink); transform: none; }
@@ -944,7 +945,7 @@ function statusLabel(k) { return (STATUS_META[k] || STATUS_META.new).label; }
 function nextStatus(k) { const i = ORDER_FLOW.indexOf(k); return (i >= 0 && i < ORDER_FLOW.length - 1) ? ORDER_FLOW[i + 1] : null; }
 
 // ---- stock / availability ----
-function itemStock(it) { return Number.isFinite(it && it.stock) ? it.stock : null; } // null = untracked (always available)
+function itemStock(it) { const s = it && it.stock; if (s === null || s === undefined || s === "") return null; const n = Number(s); return Number.isFinite(n) ? n : null; } // null = untracked (always available)
 function isAvailable(it) { return !it || it.available !== false; }
 function inStock(it) { const s = itemStock(it); return s == null || s > 0; }
 
@@ -1085,7 +1086,7 @@ function App() {
         err => { console.error(err); catalogItemsRef.current = SEED; applyStock(); });
       // live per-item stock counts (decrease the instant an order is placed)
       const offStock = FB.db.collection("stock").onSnapshot(
-        snap => { const m = {}; snap.docs.forEach(x => { const c = x.data().count; if (c != null) m[x.id] = c; }); stockMapRef.current = m; applyStock(); },
+        snap => { const m = {}; snap.docs.forEach(x => { const c = Number(x.data().count); if (Number.isFinite(c)) m[x.id] = c; }); stockMapRef.current = m; applyStock(); },
         err => console.error(err));
       // live settings (discounts, promo, codes, shop info, charges)
       const offSettings = FB.db.collection("shop").doc("settings").onSnapshot(
@@ -1727,7 +1728,8 @@ function Card({it, settings, onAdd, onView}) {
     e('div',{className:'body'},
       e('div',{className:'name'}, it.name),
       e('div',{className:'desc'}, it.desc),
-      low && e('div',{className:'stock-low'}, 'Only '+stock+' left'),
+      stock != null && !out && stock <= 10 && e('div',{className: low ? 'stock-low' : 'stock-ok'},
+        low ? ('Only '+stock+' left') : (stock+' in stock')),
       e('div',{className:'row'},
         disc
           ? e('span',{className:'price-wrap'},
@@ -1766,7 +1768,7 @@ function ProductModal({it, settings, inCartQty, onAdd, onClose}) {
         disc && e('span',{className:'price-old', style:{fontSize:16}}, rupees(it.price))
       ),
       e('p',{style:{fontSize:14.5, color:'var(--text)', lineHeight:1.6, marginBottom:14}}, it.desc),
-      stock != null && e('div',{style:{fontSize:13, fontWeight:600, marginBottom:16, color:(out||stock<=5)?'var(--danger)':'var(--muted)'}},
+      stock != null && (out || stock <= 10) && e('div',{style:{fontSize:13, fontWeight:600, marginBottom:16, color:(out||stock<=5)?'var(--danger)':'var(--muted)'}},
         out ? 'Out of stock' : (stock<=5 ? ('Only '+stock+' left in stock') : (stock+' in stock'))),
       out
         ? e('button',{className:'btn-primary', style:{width:'100%'}, disabled:true}, 'Out of stock')

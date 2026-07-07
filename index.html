@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Maa Santoshi Steel Center — Kitchenwares</title>
-<meta name="description" content="Maa Santoshi Steel Center, Bhandup West, Mumbai — quality stainless steel kitchenware & cookware. Browse cookware, utensils, mixers, cookers, bakeware and storage, and order easily on WhatsApp.">
+<title>Jain’s Bartan Bazaar — Kitchenwares</title>
+<meta name="description" content="Jain’s Bartan Bazaar, Bhandup West, Mumbai — quality stainless steel kitchenware & cookware. Browse cookware, utensils, mixers, cookers, bakeware and storage, and order easily on WhatsApp.">
 <meta name="theme-color" content="#e8732e">
-<link rel="icon" type="image/png" href="https://dfrod.github.io/maa-santoshi-store/photos/SantoshiMaa.png">
-<link rel="apple-touch-icon" href="https://dfrod.github.io/maa-santoshi-store/photos/SantoshiMaa.png">
+<link rel="icon" type="image/png" href="https://dfrod.github.io/maa-santoshi-store/photos/logo-jbb.png">
+<link rel="apple-touch-icon" href="https://dfrod.github.io/maa-santoshi-store/photos/logo-jbb.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dfrod.github.io/maa-santoshi-store/">
-<meta property="og:title" content="Maa Santoshi Steel Center — Kitchenwares">
+<meta property="og:title" content="Jain’s Bartan Bazaar — Kitchenwares">
 <meta property="og:description" content="Browse our kitchenware and place your order on WhatsApp.">
 <meta property="og:image" content="https://dfrod.github.io/maa-santoshi-store/photos/og-banner.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Maa Santoshi Steel Center — Kitchenwares, Bhandup West, Mumbai">
+<meta property="og:image:alt" content="Jain’s Bartan Bazaar — Kitchenwares, Bhandup West, Mumbai">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://dfrod.github.io/maa-santoshi-store/photos/og-banner.jpg">
 <div id="root"></div>
@@ -827,7 +827,7 @@ const DEFAULT_CATEGORIES = ["Cookware", "Utensils", "Mixers", "Cookers", "Bakewa
 const EMOJI = { Cookware:"🍳", Utensils:"🥄", Mixers:"🌀", Cookers:"🍲", Bakeware:"🧁", Storage:"🫙" };
 const FALLBACK_EMOJI = "🍴";
 const DEFAULT_PIN = "admin123"; // initial admin password — change it from the dashboard
-const LOGO_URL = "https://dfrod.github.io/maa-santoshi-store/photos/SantoshiMaa.png"; // baked-in default store logo (admin can override in settings)
+const LOGO_URL = "https://dfrod.github.io/maa-santoshi-store/photos/logo-jbb.png"; // baked-in default store logo (admin can override in settings)
 const DEFAULT_SETTINGS = {
   logo: LOGO_URL, categories: DEFAULT_CATEGORIES, promo: null, codes: [],
   shop: { phone:"9167972686", whatsapp:"9167972686", address:"Bhandup West, Mumbai", hours:"Open 8 AM – 6 PM", maps:"https://maps.app.goo.gl/p9mpYxC4tWteExAx5" },
@@ -1040,7 +1040,7 @@ function statusUpdateText(o) {
     cancelled: "Your order has been cancelled. Do reach out if you have any questions."
   };
   return (o.name ? ("Hello " + o.name + ",\n\n") : "Hello,\n\n") +
-    (body[st] || body.new) + (items ? ("\n\nOrder: " + items) : "") + "\n— Maa Santoshi Steel Center";
+    (body[st] || body.new) + (items ? ("\n\nOrder: " + items) : "") + "\n— Jain’s Bartan Bazaar";
 }
 
 // ---- stock / availability ----
@@ -1078,7 +1078,7 @@ function shareItemWA(it, settings) {
   const base = location.origin + location.pathname;
   const url = base + "#p=" + encodeURIComponent(it.id);
   const msg = "*" + it.name + "* — " + rupees(finalPrice(it, settings)) +
-    "\nAt Maa Santoshi Steel Center 🍳\n" + url;
+    "\nAt Jain’s Bartan Bazaar 🍳\n" + url;
   window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank", "noopener");
 }
 // ---- WhatsApp ordering ----
@@ -1089,7 +1089,7 @@ function waLink(num10, text) {
 }
 function orderToText(order, settings) {
   const lines = order.lines.map(l => "• " + l.qty + " × " + l.name + " — " + rupees(l.price * l.qty)).join("\n");
-  let t = "Hello Maa Santoshi Steel Center, I'd like to place this order:\n\n" + lines +
+  let t = "Hello Jain’s Bartan Bazaar, I'd like to place this order:\n\n" + lines +
     "\n\nSubtotal: " + rupees(order.subtotal != null ? order.subtotal : order.total);
   if (order.codeDiscount) t += "\nCode " + order.code + " (-" + order.codePercent + "%): -" + rupees(order.codeDiscount);
   if (order.deliveryFee) t += "\nDelivery: " + rupees(order.deliveryFee);
@@ -1762,7 +1762,7 @@ function App() {
             e('span',{className:'crest'+((settings.logo && !logoBroken)?' has-img':'')},
               (settings.logo && !logoBroken) ? e('img',{src:settings.logo, alt:'Logo', onError:()=>setLogoBroken(true)}) : e(LogoMark)),
             e('span', null,
-              e('span',{className:'mark'},'Maa Santoshi Steel Center'),
+              e('span',{className:'mark'},'Jain’s Bartan Bazaar'),
               e('span',{className:'tag'},'Kitchenwares')
             )
           ),
@@ -2088,12 +2088,12 @@ function StatusStepper({status}) {
 function Footer({settings}) {
   const shop = settings.shop || {};
   const hasContact = shop.phone || shop.whatsapp || shop.address || shop.hours || shop.maps;
-  const wa = shop.whatsapp ? waLink(shop.whatsapp, "Hello Maa Santoshi Steel Center, I have a question.") : null;
+  const wa = shop.whatsapp ? waLink(shop.whatsapp, "Hello Jain’s Bartan Bazaar, I have a question.") : null;
   return e('footer',{className:'footer'},
     e('div',{className:'wrap'},
       e('div',{className:'f-grid'},
         e('div',{className:'f-brand'},
-          e('div',{className:'f-name'}, 'Maa Santoshi Steel Center'),
+          e('div',{className:'f-name'}, 'Jain’s Bartan Bazaar'),
           e('div',{className:'f-tag'}, 'Kitchenwares'),
           wa && e('a',{href:wa, target:'_blank', rel:'noopener', style:{display:'inline-block', marginTop:14}},
             e('span',{className:'wa-btn'}, '💬 Chat on WhatsApp'))

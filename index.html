@@ -371,7 +371,7 @@
     background: radial-gradient(circle at 50% 35%, var(--surface-2), #ecdfca);
     display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
   }
-  .card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+  .card .thumb img { width: 100%; height: 100%; object-fit: contain; padding: 8px; transition: transform .35s ease; }
   .card:hover .thumb img { transform: scale(1.05); }
   .card .thumb .ph { font-size: 60px; opacity: .55; filter: drop-shadow(0 4px 8px rgba(40,28,12,.12)); }
   .card .pill {
@@ -467,7 +467,7 @@
     display: flex; align-items: center; justify-content: center; font-size: 25px;
     overflow: hidden; flex-shrink: 0;
   }
-  .cart-line .ci-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .cart-line .ci-thumb img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
   .cart-line .ci-info { flex: 1; }
   .cart-line .ci-name { font-weight: 600; font-size: 14px; }
   .cart-line .ci-price { font-size: 13px; color: var(--muted); }
@@ -530,7 +530,7 @@
     display: flex; align-items: center; justify-content: center; font-size: 27px;
     overflow: hidden; flex-shrink: 0;
   }
-  .admin-item .ai-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .admin-item .ai-thumb img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
   .cust-avatar {
     width: 48px; height: 48px; border-radius: 999px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
@@ -621,7 +621,7 @@
   .gallery-strip { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .gallery-strip::-webkit-scrollbar { display: none; }
   .gallery-slide { flex: 0 0 100%; height: 100%; scroll-snap-align: center; }
-  .gallery-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .gallery-slide img { width: 100%; height: 100%; object-fit: contain; padding: 10px; display: block; }
   .gal-arrow {
     position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px;
     border-radius: 50%; border: none; background: rgba(28,24,20,.55); color: #fff; font-size: 22px;
@@ -703,7 +703,7 @@
     display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
   }
   :root[data-theme="dark"] .pd-hero { background: radial-gradient(circle at 50% 35%, var(--surface-2), var(--ink-2)); }
-  .pd-hero img { width: 100%; height: 100%; object-fit: cover; }
+  .pd-hero img { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
   .pd-hero .ph { font-size: 92px; opacity: .55; }
   .qstep { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
   .qstep button { width: 40px; height: 40px; border: none; background: var(--surface-2); color: var(--text); font-size: 20px; cursor: pointer; }
@@ -870,6 +870,12 @@ function kb(b) { return Math.round((b || 0) / 1024) + " KB"; }
 function pctFull(b) { return Math.round((b || 0) / FS_DOC_LIMIT * 100); }
 // a base64-embedded photo (counts toward the 1 MiB doc limit) vs. an external link/repo path (free)
 function isDataUrl(s) { return typeof s === "string" && s.slice(0, 5) === "data:"; }
+// resolve a possibly-relative logo path to an absolute repo URL so it loads from any page path
+function resolveLogo(u) {
+  if (typeof u !== "string" || !u) return u;
+  if (u.slice(0, 5) === "data:" || /^https?:\/\//i.test(u)) return u;
+  return IMG_BASE + u.replace(/^\/+/, "").replace(/^photos\//i, "");
+}
 
 async function saveSettings(s) {
   try {
@@ -1077,7 +1083,7 @@ function computeTotals(subtotal, settings, codePercent) {
 function shareItemWA(it, settings) {
   const base = location.origin + location.pathname;
   const url = base + "#p=" + encodeURIComponent(it.id);
-  const msg = "*" + it.name + "* — " + rupees(finalPrice(it, settings)) +
+  const msg = "*" + it.name + "*" + ((settings && settings.hidePrices) ? "" : (" — " + rupees(finalPrice(it, settings)))) +
     "\nAt Jain’s Bartan Bazaar 🍳\n" + url;
   window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank", "noopener");
 }
@@ -1088,6 +1094,16 @@ function waLink(num10, text) {
   return "https://wa.me/91" + d + (text ? ("?text=" + encodeURIComponent(text)) : "");
 }
 function orderToText(order, settings) {
+  const hp = !!((settings && settings.hidePrices) || order.hidePrices);
+  if (hp) {
+    // prices hidden → send an enquiry (items only, no amounts)
+    const lines = order.lines.map(l => "• " + l.qty + " × " + l.name).join("\n");
+    let t = "Hello Jain’s Bartan Bazaar, I'd like to enquire about these items:\n\n" + lines +
+      "\n\nName: " + (order.name || order.customer || "");
+    if (order.phone) t += "\nPhone: " + fmtPhone(order.phone);
+    if (order.address) t += "\nDeliver to: " + order.address;
+    return t;
+  }
   const lines = order.lines.map(l => "• " + l.qty + " × " + l.name + " — " + rupees(l.price * l.qty)).join("\n");
   let t = "Hello Jain’s Bartan Bazaar, I'd like to place this order:\n\n" + lines +
     "\n\nSubtotal: " + rupees(order.subtotal != null ? order.subtotal : order.total);
@@ -1166,8 +1182,15 @@ function App() {
   const [sort, setSort] = useState("featured");   // catalog sort order
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
-  const [logoBroken, setLogoBroken] = useState(false); // header logo URL failed to load → fall back to the crest mark
-  useEffect(() => { setLogoBroken(false); }, [settings.logo]); // give a newly-set logo a fresh chance to load
+  const [logoOk, setLogoOk] = useState(false); // true only once the logo image actually loads (else show the crest mark — never a broken white box)
+  useEffect(() => {
+    setLogoOk(false);
+    if (!settings.logo) return;
+    const im = new Image();
+    im.onload = () => setLogoOk(true);
+    im.onerror = () => setLogoOk(false);
+    im.src = resolveLogo(settings.logo);
+  }, [settings.logo]);
   // open a shared product (deep link #p=<id>) once the catalog has loaded
   useEffect(() => {
     if (deepLinkedRef.current || !Array.isArray(items)) return;
@@ -1387,7 +1410,7 @@ function App() {
     const valid = appliedCode ? findActiveCode(settings, appliedCode.code) : null;
     const pct = valid ? (Number(valid.percent) || 0) : 0;
     const t = computeTotals(cartTotal, settings, pct);
-    if (t.minOrder > 0 && t.afterDiscount < t.minOrder) { showToast("Minimum order is " + rupees(t.minOrder)); return; }
+    if (!settings.hidePrices && t.minOrder > 0 && t.afterDiscount < t.minOrder) { showToast("Minimum order is " + rupees(t.minOrder)); return; }
     const order = {
       id: "o"+Date.now(), ts: Date.now(),
       uid: (FB.enabled && FB.auth.currentUser) ? FB.auth.currentUser.uid : null,
@@ -1400,6 +1423,7 @@ function App() {
       total: t.total,
       status: "new", statusAt: new Date().toLocaleString(),
       when: new Date().toLocaleString(), read: false,
+      hidePrices: !!settings.hidePrices, // this order was placed as a price-less enquiry
     };
     // open WhatsApp synchronously (before any await) so mobile browsers don't block the popup
     if (via === "whatsapp") {
@@ -1766,8 +1790,8 @@ function App() {
       e('div', {className:'wrap'},
         e('div', {className:'bar'},
           e('div', {className:'logo', onClick:goHome, title:'Refresh'},
-            e('span',{className:'crest'+((settings.logo && !logoBroken)?' has-img':'')},
-              (settings.logo && !logoBroken) ? e('img',{src:settings.logo, alt:'Logo', onError:()=>setLogoBroken(true)}) : e(LogoMark)),
+            e('span',{className:'crest'+(logoOk?' has-img':'')},
+              logoOk ? e('img',{src:resolveLogo(settings.logo), alt:''}) : e(LogoMark)),
             e('span', null,
               e('span',{className:'mark'},'Jain’s Bartan Bazaar'),
               e('span',{className:'tag'},'Kitchenwares')
@@ -1886,7 +1910,7 @@ function App() {
       onSaveAddress:saveAddress, onToast:showToast}),
     modal==='login' && e(LoginModal, {onClose:()=>setModal(null), onLogin:customerLogin}),
     modal==='existingLogin' && e(ExistingLogin, {onClose:()=>setModal(null), onLogin:customerLogin, onNew:()=>setModal('login')}),
-    modal==='myorders' && e(MyOrders, {orders:myOrders, onReorder:reorder, onDeleteOrder:customerDeleteOrder, onClose:()=>{
+    modal==='myorders' && e(MyOrders, {orders:myOrders, hidePrices:!!settings.hidePrices, onReorder:reorder, onDeleteOrder:customerDeleteOrder, onClose:()=>{
       setSeenDeliveries(myOrders.filter(o=>o.delivery).map(o=>o.id+o.delivery.sentAt));
       setModal(null);
     }}),
@@ -1964,7 +1988,7 @@ function Card({it, settings, reviews, onAdd, onView}) {
     e('div',{className:'thumb'},
       it.img ? e('img',{src:it.img, alt:it.name}) : e('span',{className:'ph'}, catEmoji(it.cat)),
       e('span',{className:'pill'}, it.cat),
-      disc && e('span',{className:'disc-badge'}, '-'+d+'%'),
+      !settings.hidePrices && disc && e('span',{className:'disc-badge'}, '-'+d+'%'),
       out && e('span',{className:'stock-badge out'}, 'Out of stock'),
       e('button',{className:'share-fab', title:'Share on WhatsApp',
         onClick:ev=>{ ev.stopPropagation(); shareItemWA(it, settings); }}, '↗')
@@ -1980,12 +2004,14 @@ function Card({it, settings, reviews, onAdd, onView}) {
       stock != null && !out && stock <= 10 && e('div',{className: low ? 'stock-low' : 'stock-ok'},
         low ? ('Only '+stock+' left') : (stock+' in stock')),
       e('div',{className:'row'},
-        disc
-          ? e('span',{className:'price-wrap'},
-              e('span',{className:'price'}, rupees(finalPrice(it, settings))),
-              e('span',{className:'price-old'}, rupees(it.price))
-            )
-          : e('span',{className:'price'}, rupees(it.price)),
+        settings.hidePrices
+          ? e('span',{style:{fontSize:13, color:'var(--muted)', fontWeight:600}}, 'Price on request')
+          : (disc
+            ? e('span',{className:'price-wrap'},
+                e('span',{className:'price'}, rupees(finalPrice(it, settings))),
+                e('span',{className:'price-old'}, rupees(it.price))
+              )
+            : e('span',{className:'price'}, rupees(it.price))),
         e('button',{className:'add-btn', disabled:out,
           onClick:ev=>{ ev.stopPropagation(); onAdd(); }}, out?'Out of stock':'Add to cart')
       )
@@ -2021,7 +2047,7 @@ function ProductModal({it, settings, reviews, inCartQty, onAdd, onSubmitReview, 
       e('button',{className:'close-x', onClick:onClose}, '×'),
       e('div',{className:'pd-hero'},
         imgs.length ? e(Gallery,{imgs, alt:it.name}) : e('span',{className:'ph'}, catEmoji(it.cat)),
-        disc && e('span',{className:'disc-badge'}, '-'+d+'%'),
+        !settings.hidePrices && disc && e('span',{className:'disc-badge'}, '-'+d+'%'),
         out && e('span',{className:'stock-badge out'}, 'Out of stock')
       ),
       e('div',{style:{display:'flex', gap:8, alignItems:'center', marginBottom:8, flexWrap:'wrap'}},
@@ -2031,10 +2057,12 @@ function ProductModal({it, settings, reviews, inCartQty, onAdd, onSubmitReview, 
       rs.count>0 && e('div',{style:{display:'flex', alignItems:'center', gap:8, margin:'2px 0 10px'}},
         e(Stars,{value:rs.avg, size:16}),
         e('span',{style:{fontSize:13, color:'var(--muted)'}}, rs.avg+' · '+rs.count+' review'+(rs.count===1?'':'s'))),
-      e('div',{style:{display:'flex', alignItems:'baseline', gap:10, margin:'4px 0 12px', flexWrap:'wrap'}},
-        e('span',{className:'price', style:{fontSize:26}}, rupees(finalPrice(it, settings))),
-        disc && e('span',{className:'price-old', style:{fontSize:16}}, rupees(it.price))
-      ),
+      settings.hidePrices
+        ? e('div',{style:{fontSize:15, color:'var(--muted)', fontWeight:600, margin:'6px 0 14px'}}, 'Price on request — add to your enquiry')
+        : e('div',{style:{display:'flex', alignItems:'baseline', gap:10, margin:'4px 0 12px', flexWrap:'wrap'}},
+            e('span',{className:'price', style:{fontSize:26}}, rupees(finalPrice(it, settings))),
+            disc && e('span',{className:'price-old', style:{fontSize:16}}, rupees(it.price))
+          ),
       e('p',{style:{fontSize:14.5, color:'var(--text)', lineHeight:1.6, marginBottom:14}}, it.desc),
       stock != null && (out || stock <= 10) && e('div',{style:{fontSize:13, fontWeight:600, marginBottom:16, color:(out||stock<=5)?'var(--danger)':'var(--muted)'}},
         out ? 'Out of stock' : (stock<=5 ? ('Only '+stock+' left in stock') : (stock+' in stock'))),
@@ -2129,7 +2157,8 @@ function CartModal({cartItems, cartTotal, totals, appliedCode, setQty, removeCar
   const [codeInput, setCodeInput] = useState(appliedCode ? appliedCode.code : "");
   const [codeErr, setCodeErr] = useState("");
   const ch = orderCharges(settings);
-  const belowMin = ch.minOrder > 0 && totals.afterDiscount < ch.minOrder;
+  const hidePrices = !!settings.hidePrices;
+  const belowMin = !hidePrices && ch.minOrder > 0 && totals.afterDiscount < ch.minOrder;
   const waNumber = settings.shop && settings.shop.whatsapp;
   const applyCodeNow = () => {
     const err = onApplyCode(codeInput);
@@ -2178,10 +2207,10 @@ function CartModal({cartItems, cartTotal, totals, appliedCode, setQty, removeCar
       belowMin && e('div',{className:'err', style:{textAlign:'center'}},
         'Minimum order is '+rupees(ch.minOrder)+'. Add '+rupees(ch.minOrder-totals.afterDiscount)+' more to continue.'),
       waNumber
-        ? e('button',{className:'wa-btn', style:{width:'100%', opacity:belowMin?.5:1, cursor:belowMin?'not-allowed':'pointer'}, disabled:belowMin, onClick:()=>onPlace('whatsapp')}, '💬 Place order on WhatsApp')
-        : e('button',{className:'btn-primary', style:{width:'100%'}, disabled:belowMin, onClick:()=>onPlace('app')}, 'Confirm order'),
+        ? e('button',{className:'wa-btn', style:{width:'100%', opacity:belowMin?.5:1, cursor:belowMin?'not-allowed':'pointer'}, disabled:belowMin, onClick:()=>onPlace('whatsapp')}, hidePrices ? '💬 Send enquiry on WhatsApp' : '💬 Place order on WhatsApp')
+        : e('button',{className:'btn-primary', style:{width:'100%'}, disabled:belowMin, onClick:()=>onPlace('app')}, hidePrices ? 'Send enquiry' : 'Confirm order'),
       waNumber && e('p',{style:{fontSize:12, color:'var(--muted)', textAlign:'center', marginTop:8}},
-        'Sends your order to the shop and opens WhatsApp to confirm.')
+        hidePrices ? 'Sends your enquiry to the shop and opens WhatsApp.' : 'Sends your order to the shop and opens WhatsApp to confirm.')
     );
   };
 
@@ -2197,10 +2226,12 @@ function CartModal({cartItems, cartTotal, totals, appliedCode, setQty, removeCar
               e('div',{className:'ci-thumb'}, x.item.img?e('img',{src:x.item.img}):catEmoji(x.item.cat)),
               e('div',{className:'ci-info'},
                 e('div',{className:'ci-name'}, x.item.name),
-                e('div',{className:'ci-price'},
-                  rupees(finalPrice(x.item, settings))+' each',
-                  hasDiscount(x.item, settings) && e('span',{className:'price-old', style:{marginLeft:6}}, rupees(x.item.price))
-                )
+                hidePrices
+                  ? e('div',{className:'ci-price', style:{color:'var(--muted)'}}, 'Price on request')
+                  : e('div',{className:'ci-price'},
+                      rupees(finalPrice(x.item, settings))+' each',
+                      hasDiscount(x.item, settings) && e('span',{className:'price-old', style:{marginLeft:6}}, rupees(x.item.price))
+                    )
               ),
               e('div',{className:'qty'},
                 e('button',{onClick:()=>setQty(x.id,-1)}, '−'),
@@ -2209,7 +2240,7 @@ function CartModal({cartItems, cartTotal, totals, appliedCode, setQty, removeCar
               ),
               e('button',{className:'remove', onClick:()=>removeCart(x.id)}, 'Remove')
             )),
-            e('div',{className:'code-box'},
+            !hidePrices && e('div',{className:'code-box'},
               appliedCode
                 ? e('div',{className:'code-applied'},
                     e('span',{className:'ca-info'},
@@ -2230,6 +2261,9 @@ function CartModal({cartItems, cartTotal, totals, appliedCode, setQty, removeCar
                   )
             ),
             (() => {
+              if (hidePrices) return e('div',{className:'cart-total', style:{flexDirection:'column', alignItems:'stretch', gap:4}},
+                e('div',{style:{fontWeight:700}}, 'Prices on request'),
+                e('div',{style:{fontSize:13, color:'var(--muted)', fontWeight:400}}, 'Send your list and the shop will share prices and confirm on WhatsApp.'));
               const showDelivery = ch.deliveryFee > 0;
               const showGst = totals.gstPercent > 0 && totals.gstAmount > 0;
               const showBreak = !!appliedCode || showDelivery;
@@ -2259,7 +2293,7 @@ function CartModal({cartItems, cartTotal, totals, appliedCode, setQty, removeCar
   );
 }
 
-function MyOrders({orders, onReorder, onDeleteOrder, onClose}) {
+function MyOrders({orders, onReorder, onDeleteOrder, onClose, hidePrices}) {
   const etaText = (d) => d.num + " " + (d.num===1 ? d.unit.replace(/s$/,'') : d.unit);
   const [confirmDelId, setConfirmDelId] = useState(null);
   return e('div',{className:'overlay', onClick:onClose},
@@ -2287,18 +2321,18 @@ function MyOrders({orders, onReorder, onDeleteOrder, onClose}) {
                 : e('div',{style:{fontSize:13, color:'var(--muted)', marginBottom:10}}, 'Delivery time not set yet — the shop will update you soon.')),
               o.lines.map((l,i)=>e('div',{key:i, className:'order-line'},
                 e('span', null, l.qty+' × '+l.name),
-                e('span', null, rupees(l.price*l.qty))
+                !hidePrices && e('span', null, rupees(l.price*l.qty))
               )),
-              showBreak && e('div',{className:'order-line', style:{color:'var(--muted)'}},
+              !hidePrices && showBreak && e('div',{className:'order-line', style:{color:'var(--muted)'}},
                 e('span', null, 'Subtotal'), e('span', null, rupees(o.subtotal!=null?o.subtotal:o.total))),
-              o.code && o.codePercent>0 && e('div',{className:'order-line', style:{color:'var(--brass-deep)', fontWeight:600}},
+              !hidePrices && o.code && o.codePercent>0 && e('div',{className:'order-line', style:{color:'var(--brass-deep)', fontWeight:600}},
                 e('span', null, '🏷️ '+o.code+' (−'+o.codePercent+'%)'),
                 e('span', null, '−'+rupees(o.codeDiscount||0))),
-              o.deliveryFee>0 && e('div',{className:'order-line', style:{color:'var(--muted)'}},
+              !hidePrices && o.deliveryFee>0 && e('div',{className:'order-line', style:{color:'var(--muted)'}},
                 e('span', null, 'Delivery'), e('span', null, rupees(o.deliveryFee))),
-              e('div',{className:'order-line', style:{fontWeight:600, borderTop:'1px solid var(--line)', marginTop:6, paddingTop:8}},
+              !hidePrices && e('div',{className:'order-line', style:{fontWeight:600, borderTop:'1px solid var(--line)', marginTop:6, paddingTop:8}},
                 e('span', null, 'Total'), e('span', null, rupees(o.total))),
-              o.gstAmount>0 && e('div',{className:'order-line', style:{color:'var(--muted)', fontSize:12}},
+              !hidePrices && o.gstAmount>0 && e('div',{className:'order-line', style:{color:'var(--muted)', fontSize:12}},
                 e('span', null, 'incl. GST ('+o.gstPercent+'%)'), e('span', null, rupees(o.gstAmount))),
               e('div',{style:{display:'flex', gap:8, marginTop:12, flexWrap:'wrap'}},
                 onReorder && e('button',{className:'btn-ghost', style:{flex:1}, onClick:()=>onReorder(o)}, '🔁 Order again'),
@@ -2756,6 +2790,13 @@ function StoreSettings({settings, items, onUpdateSettings, onSaved}) {
       e('input',{value:shopMaps, onChange:ev=>setShopMaps(ev.target.value), placeholder:'https://maps.google.com/…'})),
     shopErr && e('div',{className:'err'}, shopErr),
     e('button',{className:'btn-primary', onClick:saveShop}, 'Save shop details'),
+    e('div',{style:{borderTop:'1px solid var(--line)', margin:'22px 0'}}),
+    // catalog display: hide prices (enquiry-only mode)
+    e('div',{style:{fontWeight:700, marginBottom:6}}, 'Catalog display'),
+    e('label',{style:{display:'flex', alignItems:'flex-start', gap:10, fontSize:14, cursor:'pointer', lineHeight:1.45}},
+      e('input',{type:'checkbox', checked:!!settings.hidePrices, style:{marginTop:2},
+        onChange:ev=>{ onUpdateSettings({hidePrices: ev.target.checked}); onSaved(ev.target.checked ? 'Prices hidden — customers now see an enquiry catalog' : 'Prices are shown again'); }}),
+      e('span', null, 'Hide all prices — customers browse the catalog and send an enquiry on WhatsApp without seeing prices. Takes effect for everyone instantly.')),
     e('div',{style:{borderTop:'1px solid var(--line)', margin:'22px 0'}}),
     // delivery, GST & minimum order
     e('div',{style:{fontWeight:700, marginBottom:6}}, 'Delivery, GST & minimum order'),

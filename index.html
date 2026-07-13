@@ -421,13 +421,13 @@
   .modal .sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 7px; }
-  .field input, .field textarea, .field select {
+  .field input, .field textarea, .field select, .link-input {
     width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
     font: inherit; font-size: 14px; background: var(--surface-2); color: var(--text);
     transition: border-color .18s, box-shadow .18s;
   }
   .field textarea { resize: vertical; min-height: 74px; }
-  .field input:focus, .field textarea:focus, .field select:focus {
+  .field input:focus, .field textarea:focus, .field select:focus, .link-input:focus {
     outline: none; border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(232,115,46,.14);
   }
   .modal-actions { display: flex; gap: 10px; margin-top: 26px; }
@@ -2696,7 +2696,7 @@ function StoreSettings({settings, items, onUpdateSettings, onSaved}) {
       settings.logo && e('button',{className:'remove', onClick:()=>{ setLogoUrl(""); setLogoErr(false); onUpdateSettings({logo:null}); onSaved("Logo reset"); }}, 'Reset')
     ),
     e('div',{style:{marginBottom:8}},
-      e('input',{type:'url', value:logoUrl,
+      e('input',{className:'link-input', type:'url', value:logoUrl,
         onChange:ev=>setLogoUrl(ev.target.value),
         onBlur:commitLogoUrl,
         onKeyDown:ev=>{ if(ev.key==='Enter') ev.target.blur(); },
@@ -3196,7 +3196,7 @@ function ItemForm({existing, categories, onClose, onSave}) {
         e('label',{className:'file-label'}, '+ Upload photo',
           e('input',{ref:fileRef, type:'file', accept:'image/*', style:{display:'none'}, onChange:pick})),
         e('div',{style:{display:'flex', gap:8, marginTop:10, flexWrap:'wrap'}},
-          e('input',{type:'url', value:urlInput, onChange:ev=>setUrlInput(ev.target.value),
+          e('input',{className:'link-input', type:'url', value:urlInput, onChange:ev=>setUrlInput(ev.target.value),
             onKeyDown:ev=>{ if(ev.key==='Enter'){ ev.preventDefault(); addUrl(); } },
             placeholder:'…or paste an image link (https://…)', style:{flex:'1 1 200px'}}),
           e('button',{type:'button', className:'btn-ghost', style:{padding:'10px 16px'}, onClick:addUrl}, 'Add link')),
